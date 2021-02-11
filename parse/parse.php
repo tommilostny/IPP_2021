@@ -4,14 +4,14 @@
 include_once("scanner.php");
 $scanner = new Scanner();
 
-const SUPPORTED_LANG = "IPPcode21";
+//Zpracování chyb
+include_once("error.php");
 
 //Načtení prvního tokenu a kontrola hlavičky (chybná hlavička -> kód 21)
 $token = $scanner->GetNextToken();
 if ($token->Type != HEADER || $token->Attribute != SUPPORTED_LANG)
 {
-    fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk ". SUPPORTED_LANG . ".\n");
-    exit(21);
+    ExitHeaderError();
 }
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
