@@ -15,8 +15,14 @@ if ($token->Type != TokenType::HEADER || $token->Attribute != SUPPORTED_LANG)
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<program language=\"" . $token->Attribute . "\">\n";
 
-//TODO: načtení instrukcí programu
-#echo Instruction::OPCODES["MOVE"][0];
+do
+{
+    $token = $scanner->GetNextToken();
+    echo "Token type: " . $token->Type;
+    echo "Token attribute: " . $token->Attribute;
+    echo "\n";
+}
+while ($token->Type != TokenType::EOF);
 
 echo "</program>\n"; //Konec programu
 ?>

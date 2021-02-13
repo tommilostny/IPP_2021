@@ -17,7 +17,7 @@ const ERROR_INTERNAL = 99;
 //Vytisknout chybu hlavičky na standardní chybový výstup a ukončit program.
 function ExitHeaderError()
 {
-    fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk ". SUPPORTED_LANG . ".\n");
+    fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk \"". SUPPORTED_LANG . "\".\n");
     exit(ERROR_HEADER);
 }
 
