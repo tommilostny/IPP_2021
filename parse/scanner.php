@@ -1,33 +1,16 @@
-<?php # Pomocné třídy lexikálního analyzátoru
+<?php # Lexikální analyzátor
 
-//Typy Tokenů
-const EOL = -2;
-const EOF = -1;
-const HEADER = 0;
-const OPCODE = 1;
-const ARGUMENT = 2;
+include_once("instruction.php");
 
-const OPCODES = array
-(
-    //Práce s rámci, volání funkcí
-    "MOVE", "CREATEFRAME", "PUSHFRAME", "POPFRAME", "DEFVAR", "CALL", "RETURN",
-    //Práce s datovým zásobníkem
-    "PUSHS", "POPS",
-    //Aritmetické, relační, booleovské a konverzní instrukce
-    "ADD", "SUB", "MUL", "IDIV", "LT", "GT", "EQ", "AND", "OR", "NOT", "INT2CHAR", "STRI2INT",
-    //Vstupně-výstupní instrukce
-    "READ", "WRITE",
-    //Práce s řetězci
-    "CONCAT", "STRLEN", "GETCHAR", "SETCHAR",
-    //Práce s typy
-    "TYPE",
-    //Instrukce pro řízení toku programu
-    "LABEL", "JUMP", "JUMPIFEQ", "JUMPIFNEQ", "EXIT",
-    //Ladicí instrukce
-    "DPRINT", "BREAK"
-);
-
-const ARGTYPES = array("int", "bool", "string", "nil", "label", "type", "var");
+class TokenType
+{
+    public const EOL = -2;
+    public const EOF = -1;
+    public const HEADER = 0;
+    public const OPCODE = 1;
+    public const ARGUMENT = 2;
+    public const LEX_ERROR = 3;
+}
 
 class Token
 {
@@ -43,14 +26,14 @@ class Scanner
     {
         $token = new Token();
         $currText = "";
+        $continueRead = true;
         $loadingHeader = false;
-        $cnt = 0;
 
-        while ($token->Type == NULL)
+        while ($continueRead)
         {
             if (feof($this->File))
             {
-                $token->Type = EOF;
+                $token->Type = TokenType::EOF;
             }
             else
             {
@@ -63,7 +46,7 @@ class Scanner
                 elseif ($loadingHeader && $lastChar == "\n")
                 {
                     $token->Attribute = $currText;
-                    $token->Type = HEADER;
+                    $token->Type = TokenType::HEADER;
                     break;
                 }
 
