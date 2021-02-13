@@ -40,11 +40,14 @@ class Scanner
             case "\n":
                 $token->Type = TokenType::EOL;
                 break;
+
+            //TODO: Process arguments and errors
+
             default:
-                if (array_key_exists($word, Instruction::OPCODES))
+                if (array_key_exists(strtoupper($word), Instruction::OPCODES))
                 {
                     $token->Type = TokenType::OPCODE;
-                    $token->Attribute = $word;
+                    $token->Attribute = strtoupper($word);
                 }
                 else
                 {
@@ -68,7 +71,7 @@ class Scanner
                 fseek($this->File, -1, SEEK_CUR);
                 $inComment = false;
             }
-            elseif($read == "#")
+            else if ($read == "#")
             {
                 $inComment = true;
             }
@@ -89,9 +92,9 @@ class Scanner
         return $string;
     }
 
-    private function ResolveArgType()
+    private function ResolveArgType(string $string)
     {
-
+        //TODO: Search in ARGTYPES array (not NULL -> variable, literal, ...; NULL -> label)
     }
 }
 ?>

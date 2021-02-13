@@ -15,14 +15,19 @@ if ($token->Type != TokenType::HEADER || $token->Attribute != SUPPORTED_LANG)
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<program language=\"" . $token->Attribute . "\">\n";
 
-do
+$order = 1;
+while (($token = $scanner->GetNextToken())->Type != TokenType::EOF)
 {
-    $token = $scanner->GetNextToken();
-    echo "Token type: " . $token->Type;
-    echo "Token attribute: " . $token->Attribute;
-    echo "\n";
+    //TODO: Load arguments based on syntax defined in OPCODES dictionary
+    if ($token->Type == TokenType::OPCODE)
+    {
+        echo "\t<instruction order=\"" . $order++ . "\" opcode=\"" . $token->Attribute . "\">\n";
+
+        //TODO: Print argument tags
+
+        echo "\t</instruction>\n"; //Konec instrukce
+    }
 }
-while ($token->Type != TokenType::EOF);
 
 echo "</program>\n"; //Konec programu
 ?>

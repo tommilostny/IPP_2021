@@ -56,6 +56,6 @@ class Instruction
         "BREAK" => array()
     );
 
-    public const ARGTYPES = array("int", "bool", "string", "nil", "label", "type", "var");
+    public const ARGTYPES = array("int", "bool", "string", "nil", "label", "type", "var", NULL);
 }
 ?>
