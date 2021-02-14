@@ -40,8 +40,8 @@ class Scanner
             case "\n":
                 $token->Type = TokenType::EOL;
                 break;
-
-            //TODO: Process arguments and errors
+            case "":
+                $token->Type = TokenType::EOF;
 
             default:
                 if (array_key_exists(strtoupper($word), Instruction::OPCODES))
@@ -51,8 +51,16 @@ class Scanner
                 }
                 else
                 {
-                    $token->Type = TokenType::UNKNOWN;
-                    $token->Attribute = $word;
+                    if (($type =Instruction::ResolveArgumentType($word)) != NULL)
+                    {
+                        $token->Type = TokenType::ARGUMENT;
+                        $token->Attribute = array($type, $word);
+                    }
+                    else
+                    {
+                        $token->Type = TokenType::UNKNOWN;
+                        $token->Attribute = $word;
+                    }
                 }
                 break;
         }
@@ -91,10 +99,4 @@ class Scanner
         }
         return $string;
     }
-
-    private function ResolveArgType(string $string)
-    {
-        //TODO: Search in ARGTYPES array (not NULL -> variable, literal, ...; NULL -> label)
-    }
 }
-?>
