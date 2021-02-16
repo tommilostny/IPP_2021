@@ -25,6 +25,17 @@ class Argument
         }
         return NULL;
     }
+
+    private const SYMBS = array("int", "bool", "string", "nil", "var");
+
+    public function IsSymb(string $type)
+    {
+        foreach (self::SYMBS as $symb)
+        {
+            if ($type == $symb) return true;
+        }
+        return false;
+    }
 }
 
 ?>
