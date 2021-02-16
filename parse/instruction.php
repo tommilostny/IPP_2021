@@ -1,5 +1,8 @@
 <?php # Pomocné struktury pro práci s instrukcemi jazyka IPPcode21
 
+include_once("scanner.php");
+include_once("argument.php");
+
 class Instruction
 {
     //Operační kódy IPPcode21 a syntaxe jejich argumentů
@@ -57,9 +60,41 @@ class Instruction
         "BREAK" => array( "\n" )
     );
 
+    private $Arguments = array();
+    private $Scanner;
+    private $Order;
+    private $Opcode;
+
+    public function __construct(string $opcode, int $order, Scanner $scanner)
+    {
+        $this->Opcode = $opcode;
+        $this->Order = $order;
+        $this->Scanner = $scanner;
+
+        while (($arg = $this->LoadArgument()) != NULL)
+        {
+            # TODO: check syntax based on OPCODE && $arg  "\n"
+            array_push($this->Arguments, $arg);
+        }
+    }
+
+    private function LoadArgument()
+    {
+        //Načítání argumentu pomocí Scanneru
+        # TODO: return Argument object or NULL
+        return NULL;
+    }
+
     public function IsOpcode($word)
     {
         return array_key_exists(strtoupper($word), self::OPCODES);
+    }
+
+    public function Print()
+    {
+        # TODO: <instruction ...>
+        # TODO: <arg[x]>...</arg[x]> (all from $Arguments Print(x))
+        # TODO: </instruction>
     }
 }
 ?>

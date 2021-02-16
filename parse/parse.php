@@ -1,4 +1,4 @@
-<?php # IPP parser (autor: Tomáš Milostný, xmilos02)
+<?php # IPPcode21 parser (autor: Tomáš Milostný, xmilos02)
 
 ini_set('display_errors', 'stderr');
 
@@ -17,19 +17,27 @@ if ($token->Type != TokenType::HEADER || $token->Attribute != SUPPORTED_LANG)
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<program language=\"" . $token->Attribute . "\">\n";
 
-$order = 1;
+$order = 1; # TODO: probably do not need (get from count of instructions array)
+$instructions = array();
+
 while (($token = $scanner->GetNextToken())->Type != TokenType::EOF)
 {
-    //TODO: Load arguments based on syntax defined in OPCODES dictionary
-    if ($token->Type == TokenType::OPCODE)
+    //přeskočit prázdné řádky
+    if ($token->Type == TokenType::EOL) continue;
+
+    //token obsahuje operační kód instrukce, načíst její argumenty
+    if ($token->Type == TokenType::OPCODE) 
     {
+        # TODO: push instruction to instructions array
+
         echo "\t<instruction order=\"" . $order++ . "\" opcode=\"" . $token->Attribute . "\">\n";
 
-        //TODO: Print argument tags
 
         echo "\t</instruction>\n"; //Konec instrukce
     }
 }
+
+# TODO: if all went well print all instructions from the array
 
 echo "</program>\n"; //Konec programu
 ?>

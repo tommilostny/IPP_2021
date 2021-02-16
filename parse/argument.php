@@ -2,16 +2,28 @@
 
 class Argument
 {
+    #TODO: update regexes probably
     private const ARGTYPES = array
     (
         "/^int@(-)?\d+/" => "int",
         "/^(bool@)((true)|(false))$/" => "bool",
         "/^string@/" => "string",
-        "/^((GF)|(LF)|(TF))@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!)+$/" => "var",
+        "/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!)+$/" => "var",
         "/^(int|bool|string)$/" => "type", 
         "/^(nil@nil)$/" => "nil",
         "/./" => "label"
     );
+
+    private $Type;
+    private $Value;
+
+    public function __construct(string $type, $value)
+    {
+        $this->Type = $type;
+
+        # TODO: process argument value based on type
+        $this->Value = $value;
+    }
 
     public function ResolveArgumentType(string $string)
     {
@@ -35,6 +47,11 @@ class Argument
             if ($type == $symb) return true;
         }
         return false;
+    }
+
+    public function Print(int $argOrder)
+    {
+        #TODO: echo "<arg$argOrder>";
     }
 }
 
