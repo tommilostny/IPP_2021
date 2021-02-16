@@ -80,6 +80,8 @@ class Scanner
             {
                 $inComment = true;
             }
+
+            if (feof($this->File)) break;
             $read = fgetc($this->File);
         }
 

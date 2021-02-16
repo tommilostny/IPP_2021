@@ -1,5 +1,7 @@
 <?php # IPP parser (autor: Tomáš Milostný, xmilos02)
 
+ini_set('display_errors', 'stderr');
+
 include_once("scanner.php");
 $scanner = new Scanner();
 
