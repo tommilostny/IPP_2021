@@ -1,10 +1,10 @@
 <?php # Lexikální analyzátor
 
 include_once("instruction.php");
+include_once("argument.php");
 
 class TokenType
 {
-    public const UNKNOWN = -3;
     public const EOL = -2;
     public const EOF = -1;
     public const HEADER = 0;
@@ -44,23 +44,20 @@ class Scanner
                 $token->Type = TokenType::EOF;
 
             default:
-                if (array_key_exists(strtoupper($word), Instruction::OPCODES))
+                if (Instruction::IsOpcode($word))
                 {
                     $token->Type = TokenType::OPCODE;
                     $token->Attribute = strtoupper($word);
                 }
+                else if (($type = Argument::ResolveArgumentType($word)) != NULL)
+                {
+                    $token->Type = TokenType::ARGUMENT;
+                    $token->Attribute = array($type, $word);
+                }
                 else
                 {
-                    if (($type =Instruction::ResolveArgumentType($word)) != NULL)
-                    {
-                        $token->Type = TokenType::ARGUMENT;
-                        $token->Attribute = array($type, $word);
-                    }
-                    else
-                    {
-                        $token->Type = TokenType::UNKNOWN;
-                        $token->Attribute = $word;
-                    }
+                    $token->Type = TokenType::LEX_ERROR;
+                    $token->Attribute = $word;
                 }
                 break;
         }
@@ -90,10 +87,15 @@ class Scanner
         $string = $read;
         while ($string != "\n" && !ctype_space($read = fgetc($this->File)))
         {
+            if ($read == "#") break;
+
             $string .= $read;
+
             if (feof($this->File)) break;
         }
-        if ($read == "\n" && strlen($string) > 1) //konec slova je na konci řádku -> příští token bude typu EOL
+
+        //konec slova je na konci řádku nebo nalezen začátek komentáře -> příští token bude typu EOL
+        if (($read == "\n" && strlen($string) > 1) || $read == "#")
         {
             fseek($this->File, -1, SEEK_CUR);
         }

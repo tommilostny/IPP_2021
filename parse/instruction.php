@@ -2,7 +2,7 @@
 
 class Instruction
 {
-    public const OPCODES = array
+    private const OPCODES = array
     (
         //Práce s rámci, volání funkcí
         "MOVE" => array(),
@@ -56,28 +56,9 @@ class Instruction
         "BREAK" => array()
     );
 
-    private const ARGTYPES = array
-    (
-        "/^int@(-)?\d+/" => "int",
-        "/^(bool@)((true)|(false))$/" => "bool",
-        "/^string@/" => "string",
-        "/^((GF)|(LF)|(TF))@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!)+$/" => "var",
-        "/^(int|bool|string)$/" => "type", 
-        "/^(nil@nil)$/" => "nil",
-        "/./" => "label"
-    );
-
-    public function ResolveArgumentType(string $string)
+    public function IsOpcode($word)
     {
-        foreach (self::ARGTYPES as $pattern => $type)
-        {
-            if (preg_match($pattern, $string))
-            {
-                echo "Found match: \"".$string."\" is ".$type.".\n";
-                return $type;
-            }
-        }
-        return NULL;
+        return array_key_exists(strtoupper($word), self::OPCODES);
     }
 }
 ?>
