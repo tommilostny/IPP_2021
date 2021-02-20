@@ -69,7 +69,7 @@ class Instruction
     {
         if ($token->Type != TokenType::OPCODE)
         {
-            ExitOpcodeError($token->Attribute);
+            ExitOpcodeError($token->Attribute[0]);
         }
         $this->Opcode = $token->Attribute;
         $this->Order = $order;
@@ -88,25 +88,7 @@ class Instruction
             }
             else
             {
-                $argument = new Argument($token, count($this->Arguments) + 1);
-                switch ($syntaxSymbol)
-                {
-                    case "var":
-                        # code...
-                        break;
-                    case "symb":
-                        # code...
-                        break;
-                    case "\n":
-                        # code...
-                        break;
-                    case "label":
-                        # code...
-                        break;
-                    case "type":
-                        # code...
-                        break;
-                }
+                $argument = new Argument($token, count($this->Arguments) + 1, $syntaxSymbol);
                 array_push($this->Arguments, $argument);
             }
         }

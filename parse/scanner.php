@@ -17,11 +17,15 @@ class Token
 {
     public $Type = NULL;
     public $Attribute = NULL;
+    public $Line;
+    public $Position;
 }
 
 class Scanner
 {
     private $File = STDIN;
+    private $Line = 1;
+    private $Position = 0;
 
     public function GetNextToken()
     {
@@ -55,6 +59,8 @@ class Scanner
                 break;
             }
         }
+        $token->Line = $this->Line;
+        $token->Position = $this->Position;
         return $token;
     }
 
@@ -62,7 +68,7 @@ class Scanner
     {
         //přeskočit bílé znaky a komentáře
         $inComment = false;
-        $read = fgetc($this->File);
+        $read = $this->ReadChar();
         while ($inComment || (ctype_space($read) && $read != "\n") || (!$inComment && $read == "#"))
         {
             if ($read == "\n" && $inComment)
@@ -76,12 +82,12 @@ class Scanner
             }
 
             if (feof($this->File)) break;
-            $read = fgetc($this->File);
+            $read = $this->ReadChar();
         }
 
         //načtení slova do dalšího bílého znaku
         $string = $read;
-        while ($string != "\n" && !ctype_space($read = fgetc($this->File)))
+        while ($string != "\n" && !ctype_space($read = $this->ReadChar()))
         {
             if ($read == "#") break;
 
@@ -106,5 +112,20 @@ class Scanner
             return true;
         }
         return false;
+    }
+
+    private function ReadChar()
+    {
+        $read = fgetc($this->File);
+        if ($read == "\n")
+        {
+            $this->Line++;
+            $this->Position = 0;
+        }
+        else
+        {
+            $this->Position++;
+        }
+        return $read;
     }
 }

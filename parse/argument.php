@@ -15,11 +15,11 @@ class Argument
         "/./" => "label"
     );
 
-    public $Type;
+    private $Type;
     private $Value;
     private $Order;
 
-    public function __construct(Token $token, int $order)
+    public function __construct(Token $token, int $order, string $syntaxSymbol)
     {
         if ($token->Type != TokenType::ARGUMENT)
         {
@@ -29,6 +29,34 @@ class Argument
         $this->Type = $token->Attribute[0];
         $this->Value = $token->Attribute[1];
         $this->Order = $order;
+
+        switch ($syntaxSymbol)
+        {
+            case "var":
+                if ($this->Type != "var")
+                {
+                    ExitOtherError($this->Type);
+                }
+                break;
+            case "symb":
+                if (!$this->IsSymb($this->Type))
+                {
+                    ExitOtherError($this->Type);
+                }
+                break;
+            case "label":
+                if ($this->Type != "label")
+                {
+                    ExitOtherError($this->Type);
+                }
+                break;
+            case "type":
+                if ($this->Type != "type")
+                {
+                    ExitOtherError($this->Type);
+                }
+                break;
+        }
     }
 
     public function ResolveArgumentType(string $string)
@@ -45,7 +73,7 @@ class Argument
 
     private const SYMBS = array("int", "bool", "string", "nil", "var");
 
-    public function IsSymb(string $type)
+    private function IsSymb(string $type)
     {
         foreach (self::SYMBS as $symb)
         {
