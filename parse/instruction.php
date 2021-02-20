@@ -2,6 +2,7 @@
 
 include_once("scanner.php");
 include_once("argument.php");
+include_once("error.php");
 
 class Instruction
 {
@@ -61,28 +62,54 @@ class Instruction
     );
 
     private $Arguments = array();
-    private $Scanner;
     private $Order;
     private $Opcode;
 
-    public function __construct(string $opcode, int $order, Scanner $scanner)
+    public function __construct(Token $token, int $order, Scanner $scanner)
     {
-        $this->Opcode = $opcode;
-        $this->Order = $order;
-        $this->Scanner = $scanner;
-
-        while (($arg = $this->LoadArgument()) != NULL)
+        if ($token->Type != TokenType::OPCODE)
         {
-            # TODO: check syntax based on OPCODE && $arg  "\n"
-            array_push($this->Arguments, $arg);
+            ExitOpcodeError($token->Attribute);
         }
+        $this->Opcode = $token->Attribute;
+        $this->Order = $order;
+        $this->LoadArguments($scanner);        
     }
 
-    private function LoadArgument()
+    private function LoadArguments(Scanner $scanner)
     {
-        //Načítání argumentu pomocí Scanneru
-        # TODO: return Argument object or NULL
-        return NULL;
+        foreach (self::OPCODES[$this->Opcode] as $syntaxSymbol)
+        {
+            $token = $scanner->GetNextToken();
+            if ($syntaxSymbol == "\n")
+            {
+                if ($token->Type != TokenType::EOL && $token->Type != TokenType::EOF)
+                    ExitOtherError($token->Attribute);
+            }
+            else
+            {
+                $argument = new Argument($token, count($this->Arguments) + 1);
+                switch ($syntaxSymbol)
+                {
+                    case "var":
+                        # code...
+                        break;
+                    case "symb":
+                        # code...
+                        break;
+                    case "\n":
+                        # code...
+                        break;
+                    case "label":
+                        # code...
+                        break;
+                    case "type":
+                        # code...
+                        break;
+                }
+                array_push($this->Arguments, $argument);
+            }
+        }
     }
 
     public function IsOpcode($word)
@@ -92,9 +119,13 @@ class Instruction
 
     public function Print()
     {
-        # TODO: <instruction ...>
-        # TODO: <arg[x]>...</arg[x]> (all from $Arguments Print(x))
-        # TODO: </instruction>
+        echo "  <instruction order=\"$this->Order\" opcode=\"$this->Opcode\">\n";
+        
+        foreach ($this->Arguments as $argument)
+        {
+            $argument->Print();
+        }
+        echo "  </instruction>\n";
     }
 }
 ?>

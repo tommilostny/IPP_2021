@@ -21,4 +21,16 @@ function ExitHeaderError()
     exit(ERROR_HEADER);
 }
 
+function ExitOpcodeError($input)
+{
+    fwrite(STDERR, "Chybný operační kód: \"". $input . "\".\n");
+    exit(ERROR_OPCODE);
+}
+
+function ExitOtherError($input)
+{
+    fwrite(STDERR, "Chybná syntaxe: \"". $input . "\".\n");
+    exit(ERROR_OTHER);
+}
+
 ?>

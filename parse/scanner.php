@@ -25,14 +25,10 @@ class Scanner
 
     public function GetNextToken()
     {
-        $token = new Token();
-
-        if (feof($this->File))
+        if (!$this->EofCheckSet($token = new Token()))
         {
-            $token->Type = TokenType::EOF;
-        }
-        else switch ($word = $this->LoadWord())
-        {
+            switch ($word = $this->LoadWord())
+            {
             case ".":
                 $token->Type = TokenType::HEADER;
                 $token->Attribute = $this->LoadWord();
@@ -40,9 +36,6 @@ class Scanner
             case "\n":
                 $token->Type = TokenType::EOL;
                 break;
-            case "":
-                $token->Type = TokenType::EOF;
-
             default:
                 if (Instruction::IsOpcode($word))
                 {
@@ -52,14 +45,15 @@ class Scanner
                 else if (($type = Argument::ResolveArgumentType($word)) != NULL)
                 {
                     $token->Type = TokenType::ARGUMENT;
-                    $token->Attribute = array($type, $word);
+                    $token->Attribute = array($type, preg_replace("/^(string|int|bool|nil)@/", "", $word));
                 }
-                else
+                else if (!$this->EofCheckSet($token))
                 {
                     $token->Type = TokenType::LEX_ERROR;
                     $token->Attribute = $word;
                 }
                 break;
+            }
         }
         return $token;
     }
@@ -102,5 +96,15 @@ class Scanner
             fseek($this->File, -1, SEEK_CUR);
         }
         return $string;
+    }
+
+    private function EofCheckSet(Token $token)
+    {
+        if (feof($this->File))
+        {
+            $token->Type = TokenType::EOF;
+            return true;
+        }
+        return false;
     }
 }

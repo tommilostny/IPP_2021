@@ -1,8 +1,9 @@
 <?php
 
+include_once("scanner.php");
+
 class Argument
 {
-    #TODO: update regexes probably
     private const ARGTYPES = array
     (
         "/^int@(-)?\d+/" => "int",
@@ -14,15 +15,20 @@ class Argument
         "/./" => "label"
     );
 
-    private $Type;
+    public $Type;
     private $Value;
+    private $Order;
 
-    public function __construct(string $type, $value)
+    public function __construct(Token $token, int $order)
     {
-        $this->Type = $type;
-
-        # TODO: process argument value based on type
-        $this->Value = $value;
+        if ($token->Type != TokenType::ARGUMENT)
+        {
+            echo $token->Type;
+            ExitOtherError($token->Attribute);
+        }
+        $this->Type = $token->Attribute[0];
+        $this->Value = $token->Attribute[1];
+        $this->Order = $order;
     }
 
     public function ResolveArgumentType(string $string)
@@ -31,7 +37,6 @@ class Argument
         {
             if (preg_match($pattern, $string))
             {
-                echo "Found match: \"".$string."\" is ".$type.".\n"; //DEBUG print
                 return $type;
             }
         }
@@ -49,9 +54,17 @@ class Argument
         return false;
     }
 
-    public function Print(int $argOrder)
+    public function Print()
     {
-        #TODO: echo "<arg$argOrder>";
+        echo "    <arg$this->Order type=\"$this->Type\"";
+        if (strlen($this->Value) > 0)
+        {
+            echo ">$this->Value</arg$this->Order>\n";
+        }
+        else
+        {
+            echo "/>\n";
+        }
     }
 }
 
