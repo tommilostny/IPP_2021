@@ -9,10 +9,10 @@ class Argument
 		"/^int@(-)?\d+/" => "int",
 		"/^(bool@)((true)|(false))$/" => "bool",
 		"/^string@/" => "string",
-		"/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!)+$/" => "var",
+		"/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "var",
 		"/^(int|bool|string)$/" => "type", 
 		"/^(nil@nil)$/" => "nil",
-		"/./" => "label"
+		"/^([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "label"
 	);
 
 	private const SYMBS = array("int", "bool", "string", "nil", "var");

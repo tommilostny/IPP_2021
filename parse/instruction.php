@@ -107,7 +107,7 @@ class Instruction
 		{
 			$argument->Print();
 		}
-		echo "  </instruction>\n";
+		echo "\t</instruction>\n";
 	}
 }
 ?>
