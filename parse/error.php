@@ -6,7 +6,7 @@ include_once("scanner.php");
 const SUPPORTED_LANG = "IPPcode21";
 
 //Chybové kódy
-const ERROR_MISSING_PARAMETER = 10;
+const ERROR_PARAMETER = 10;
 const ERROR_INPUT_FILE = 11;
 const ERROR_OUTPUT_FILE = 12;
 
@@ -15,6 +15,12 @@ const ERROR_OPCODE = 22;
 const ERROR_OTHER = 23;
 
 const ERROR_INTERNAL = 99;
+
+function ExitErrorParameter(string $param)
+{
+	fwrite(STDERR, "Chybný parametr programu: $param\n");
+	exit(ERROR_PARAMETER);
+}
 
 function ErrorLinePosition(Token $token)
 {
