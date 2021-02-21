@@ -18,26 +18,26 @@ const ERROR_INTERNAL = 99;
 
 function ErrorLinePosition(Token $token)
 {
-    fwrite(STDERR, "Řádek $token->Line, Pozice $token->Position: ");
+	fwrite(STDERR, "Řádek $token->Line, Pozice $token->Position: ");
 }
 
 //Vytisknout chybu hlavičky na standardní chybový výstup a ukončit program.
 function ExitHeaderError()
 {
-    fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk \"". SUPPORTED_LANG . "\".\n");
-    exit(ERROR_HEADER);
+	fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk \"". SUPPORTED_LANG . "\".\n");
+	exit(ERROR_HEADER);
 }
 
 function ExitOpcodeError($input)
 {
-    fwrite(STDERR, "Chybný operační kód: \"". $input . "\".\n");
-    exit(ERROR_OPCODE);
+	fwrite(STDERR, "Chybný operační kód: \"". $input . "\".\n");
+	exit(ERROR_OPCODE);
 }
 
 function ExitOtherError($input)
 {
-    fwrite(STDERR, "Chybná syntaxe: \"". $input . "\".\n");
-    exit(ERROR_OTHER);
+	fwrite(STDERR, "Chybná syntaxe: \"". $input . "\".\n");
+	exit(ERROR_OTHER);
 }
 
 ?>
