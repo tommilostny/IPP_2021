@@ -15,6 +15,8 @@ class Argument
         "/./" => "label"
     );
 
+    private const SYMBS = array("int", "bool", "string", "nil", "var");
+
     private $Type;
     private $Value;
     private $Order;
@@ -23,7 +25,6 @@ class Argument
     {
         if ($token->Type != TokenType::ARGUMENT)
         {
-            echo $token->Type;
             ExitOtherError($token->Attribute);
         }
         $this->Type = $token->Attribute[0];
@@ -71,20 +72,9 @@ class Argument
         return NULL;
     }
 
-    private const SYMBS = array("int", "bool", "string", "nil", "var");
-
-    private function IsSymb(string $type)
-    {
-        foreach (self::SYMBS as $symb)
-        {
-            if ($type == $symb) return true;
-        }
-        return false;
-    }
-
     public function Print()
     {
-        echo "    <arg$this->Order type=\"$this->Type\"";
+        echo "\t\t<arg$this->Order type=\"$this->Type\"";
         if (strlen($this->Value) > 0)
         {
             echo ">$this->Value</arg$this->Order>\n";
@@ -93,6 +83,11 @@ class Argument
         {
             echo "/>\n";
         }
+    }
+
+    private function IsSymb(string $type)
+    {
+        return in_array($type, self::SYMBS);
     }
 }
 

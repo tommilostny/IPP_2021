@@ -101,7 +101,7 @@ class Instruction
 
     public function Print()
     {
-        echo "  <instruction order=\"$this->Order\" opcode=\"$this->Opcode\">\n";
+        echo "\t<instruction order=\"$this->Order\" opcode=\"$this->Opcode\">\n";
         
         foreach ($this->Arguments as $argument)
         {

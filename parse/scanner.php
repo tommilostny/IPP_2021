@@ -31,6 +31,9 @@ class Scanner
     {
         if (!$this->EofCheckSet($token = new Token()))
         {
+            $token->Line = $this->Line;
+            $token->Position = $this->Position;
+
             switch ($word = $this->LoadWord())
             {
             case ".":
@@ -49,7 +52,18 @@ class Scanner
                 else if (($type = Argument::ResolveArgumentType($word)) != NULL)
                 {
                     $token->Type = TokenType::ARGUMENT;
-                    $token->Attribute = array($type, preg_replace("/^(string|int|bool|nil)@/", "", $word));
+
+                    //odstranit prefixy proměnných a literálů
+                    $word = preg_replace("/^(string|int|bool|nil)@/", "", $word);
+
+                    //nahradit speciální znaky XML
+                    $word = preg_replace("/&/", "&amp;", $word);
+                    $word = preg_replace("/\"/", "&quot;", $word);
+                    $word = preg_replace("/'/", "&apos;", $word);
+                    $word = preg_replace("/</", "&lt;", $word);
+                    $word = preg_replace("/>/", "&gt;", $word);
+
+                    $token->Attribute = array($type, $word);
                 }
                 else if (!$this->EofCheckSet($token))
                 {
@@ -59,8 +73,6 @@ class Scanner
                 break;
             }
         }
-        $token->Line = $this->Line;
-        $token->Position = $this->Position;
         return $token;
     }
 
