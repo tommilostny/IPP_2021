@@ -17,6 +17,7 @@ if ($argc >= 2)
 	else ExitErrorParameter($argv[1]);
 }
 
+include_once("instruction.php");
 include_once("scanner.php");
 $scanner = new Scanner();
 
@@ -30,6 +31,7 @@ if ($token->Type != TokenType::HEADER || $token->Attribute != SUPPORTED_LANG)
 $lang = $token->Attribute;
 $instructions = array();
 
+//Načtení instrukcí programu
 for ($order = 1; ($token = $scanner->GetNextToken())->Type != TokenType::EOF;)
 {
 	//přeskočit prázdné řádky
@@ -39,12 +41,17 @@ for ($order = 1; ($token = $scanner->GetNextToken())->Type != TokenType::EOF;)
 	array_push($instructions, $instruction);
 }
 
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-echo "<program language=\"$lang\">\n";
+//Načtení instrukcí proběhlo v pořádku -> výpis XML reprezentace
+$xw = new XMLWriter();
+$xw->openMemory();
+$xw->startDocument("1.0", "UTF-8");
+$xw->startElement("program");
+$xw->writeAttribute("language", $lang);
 
 foreach ($instructions as $instruction)
-{
-	$instruction->Print();
-}
-echo "</program>\n"; //Konec programu
+	$instruction->Print($xw);
+
+$xw->endElement(); //Konec programu
+$xw->endDocument();//Konec dokumentu
+echo $xw->flush(); //Výpis XML na stdout
 ?>

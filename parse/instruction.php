@@ -99,15 +99,16 @@ class Instruction
 		return array_key_exists(strtoupper($word), self::OPCODES);
 	}
 
-	public function Print()
+	public function Print(XMLWriter $xw)
 	{
-		echo "\t<instruction order=\"$this->Order\" opcode=\"$this->Opcode\">\n";
+		$xw->startElement("instruction");
+		$xw->writeAttribute("order", $this->Order);
+		$xw->writeAttribute("opcode", $this->Opcode);
 		
 		foreach ($this->Arguments as $argument)
-		{
-			$argument->Print();
-		}
-		echo "\t</instruction>\n";
+			$argument->Print($xw);
+
+		$xw->endElement();
 	}
 }
 ?>

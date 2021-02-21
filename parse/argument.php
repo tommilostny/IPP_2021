@@ -72,17 +72,15 @@ class Argument
 		return NULL;
 	}
 
-	public function Print()
+	public function Print(XMLWriter $xw)
 	{
-		echo "\t\t<arg$this->Order type=\"$this->Type\"";
+		$xw->startElement("arg$this->Order");
+		$xw->writeAttribute("type", $this->Type);
+
 		if (strlen($this->Value) > 0)
-		{
-			echo ">$this->Value</arg$this->Order>\n";
-		}
-		else
-		{
-			echo "/>\n";
-		}
+			$xw->text($this->Value);
+		
+		$xw->endElement();
 	}
 
 	private function IsSymb(string $type)
