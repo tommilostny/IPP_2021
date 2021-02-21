@@ -52,18 +52,7 @@ class Scanner
 				else if (($type = Argument::ResolveArgumentType($word)) != NULL)
 				{
 					$token->Type = TokenType::ARGUMENT;
-
-					//odstranit prefixy proměnných a literálů
-					$word = preg_replace("/^(string|int|bool|nil)@/", "", $word);
-
-					//nahradit speciální znaky XML
-					$word = preg_replace("/&/", "&amp;", $word);
-					$word = preg_replace("/\"/", "&quot;", $word);
-					$word = preg_replace("/'/", "&apos;", $word);
-					$word = preg_replace("/</", "&lt;", $word);
-					$word = preg_replace("/>/", "&gt;", $word);
-
-					$token->Attribute = array($type, $word);
+					$token->Attribute = array($type, preg_replace("/^(string|int|bool|nil)@/", "", $word));
 				}
 				else if (!$this->EofCheckSet($token))
 				{

@@ -6,7 +6,7 @@ class Argument
 {
 	private const ARGTYPES = array
 	(
-		"/^int@(-)?\d+/" => "int",
+		"/^int@(-|\+)?\d+/" => "int",
 		"/^(bool@)((true)|(false))$/" => "bool",
 		"/^string@/" => "string",
 		"/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "var",
