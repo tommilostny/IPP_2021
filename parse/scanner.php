@@ -89,30 +89,28 @@ class Scanner
 				$inComment = false;
 			}
 			else if ($read == "#")
-			{
 				$inComment = true;
-			}
 
-			if (feof($this->File)) break;
+			if (feof($this->File))
+				break;
+
 			$read = $this->ReadChar();
 		}
 
 		//načtení slova do dalšího bílého znaku
 		$string = $read;
-		while ($string != "\n" && !ctype_space($read = $this->ReadChar()))
+		while ($string != "\n" && !ctype_space($read = $this->ReadChar()) && $read != "#")
 		{
-			if ($read == "#") break;
-
 			$string .= $read;
 
-			if (feof($this->File)) break;
+			if (feof($this->File))
+				break;
 		}
 
 		//konec slova je na konci řádku nebo nalezen začátek komentáře -> příští token bude typu EOL
 		if (($read == "\n" && strlen($string) > 1) || $read == "#")
-		{
 			fseek($this->File, -1, SEEK_CUR);
-		}
+
 		return $string;
 	}
 
@@ -129,15 +127,14 @@ class Scanner
 	private function ReadChar()
 	{
 		$read = fgetc($this->File);
+		
 		if ($read == "\n")
 		{
 			$this->Line++;
 			$this->Position = 0;
 		}
-		else
-		{
-			$this->Position++;
-		}
+		else $this->Position++;
+		
 		return $read;
 	}
 }

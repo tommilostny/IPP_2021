@@ -35,7 +35,8 @@ $instructions = array();
 for ($order = 1; ($token = $scanner->GetNextToken())->Type != TokenType::EOF;)
 {
 	//přeskočit prázdné řádky
-	if ($token->Type == TokenType::EOL) continue;
+	if ($token->Type == TokenType::EOL)
+		continue;
 
 	$instruction = new Instruction($token, $order++, $scanner);
 	array_push($instructions, $instruction);
