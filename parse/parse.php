@@ -1,6 +1,5 @@
 <?php # IPPcode21 parser (autor: Tomáš Milostný, xmilos02)
 
-ini_set('display_errors', 'stderr');
 include_once("error.php");
 
 //kontrola parametru --help
@@ -17,8 +16,9 @@ if ($argc >= 2)
 	else ExitErrorParameter($argv[1]);
 }
 
-include_once("instruction.php");
 include_once("scanner.php");
+include_once("instruction.php");
+
 $scanner = new Scanner();
 
 //Načtení prvního tokenu a kontrola hlavičky (chybná hlavička -> kód 21)
@@ -55,4 +55,5 @@ foreach ($instructions as $instruction)
 $xw->endElement(); //Konec programu
 $xw->endDocument();//Konec dokumentu
 echo $xw->flush(); //Výpis XML na stdout
+
 ?>

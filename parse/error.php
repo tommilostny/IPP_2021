@@ -1,5 +1,6 @@
 <?php
 
+ini_set('display_errors', 'stderr');
 include_once("scanner.php");
 
 //Podporovaný jazyk IPP
@@ -27,16 +28,16 @@ function ErrorLinePosition(Token $token)
 	fwrite(STDERR, "Řádek $token->Line, Pozice $token->Position: ");
 }
 
-//Vytisknout chybu hlavičky na standardní chybový výstup a ukončit program.
 function ExitHeaderError()
 {
 	fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk \"". SUPPORTED_LANG . "\".\n");
 	exit(ERROR_HEADER);
 }
 
-function ExitOpcodeError($input)
+function ExitOpcodeError(Token $token)
 {
-	fwrite(STDERR, "Chybný operační kód: \"". $input . "\".\n");
+	ErrorLinePosition($token);
+	fwrite(STDERR, "Chybný operační kód: \"".(is_array($token->Attribute) ? $token->Attribute[1] : $token->Attribute)."\".\n");
 	exit(ERROR_OPCODE);
 }
 

@@ -68,7 +68,7 @@ class Instruction
 	public function __construct(Token $token, int $order, Scanner $scanner)
 	{
 		if ($token->Type != TokenType::OPCODE)
-			ExitOpcodeError($token->Attribute[0]);
+			ExitOpcodeError($token);
 
 		$this->Opcode = $token->Attribute;
 		$this->Order = $order;

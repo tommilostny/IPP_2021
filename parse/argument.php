@@ -37,7 +37,7 @@ class Argument
 				ExitOtherError($this->Type);
 			break;
 		case "symb":
-			if (!$this->IsSymb($this->Type))
+			if (!in_array($this->Type, self::SYMBS))
 				ExitOtherError($this->Type);
 			break;
 		case "label":
@@ -70,11 +70,6 @@ class Argument
 			$xw->text($this->Value);
 		
 		$xw->endElement();
-	}
-
-	private function IsSymb(string $type)
-	{
-		return in_array($type, self::SYMBS);
 	}
 }
 
