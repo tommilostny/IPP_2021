@@ -12,9 +12,9 @@ Zpracovává parametr ``--help``:
 
 Jestliže nebyl zadán žádný parametr, program pokračuje načítáním vstupního programu následujícím způsobem:
 
-1. Předá řízení lexikálnímu analyzátoru ``Scanner`` a zkontroluje hlavičku programu, která specifikuje jazyk programu ve formátu *"``. IFJcode21``"*. Jestliže na vstupu hlavička není, nebo je ve špatném formátu, program zde skončí s chybou.
+1. V hlavní smyčce se předá řízení lexikálnímu analyzátoru ``Scanner``, který prvně zkontroluje hlavičku programu specifikující jazyk programu ve formátu *"``. IFJcode21``"*. Jestliže na vstupu hlavička není, nebo je ve špatném formátu, program zde skončí s chybou.
 
-2. Následuje smyčka, ve které vytváří objekty typu ``Instruction``. Pokud je objekt správně vytvořen (viz. [*instuction.php*](readme1.md#instructionphp)), je uložen do pole instrukcí.
+2. Následně se načítají instrukce programu do pole objektů typu ``Instruction``, které si dále načítají a kontrolují syntaxi svých argumentů.
 
 3. Pokud byly všechny instrukce programu správně načteny, je XML reprezentace struktury programu vypsána na standardní výstup s využitím knihovny ``XMLWriter`` a metodami ``Print`` tříd ``Instruction`` a ``Argument``.
 ---
@@ -24,6 +24,7 @@ Lexikální analyzátor IPPcode21 obsahuje následující třídy:
 - **``Token``** - Datová struktura tokenu (typ, atribut)
 - **``Scanner``** - Hlavní třída lexikálního analyzátoru.
     - Pracuje se souborem na vstupu (v případě tohoto projektu se standardním vstupem).
+    - Parametrem kontruktoru je jazyk programu načítaný v hlavičce.
     - Obsahuje metodu **``GetNextToken``**, která čte vstup a dle načteného slova vrátí informace ve formě tokenu. Pracuje také s ``IsOpcode`` třídy ``Instruction`` a ``ResolveArgumentType`` třídy ``Argument`` během rozpoznávání, zda se jedná o operační kód instrukce nebo argument.
     - Pokud není rozpoznán typ tokenu, program končí s lexikální chybou.
     - Rovněž obsahuje pomocné privátní metody ``LoadWord`` (načte slovo ze vstupu, ignoruje mezery a komentáře), ``EofCheckSet`` (zkontroluje konec souboru, případně nastaví typ tokenu) a ``ReadChar`` (načte znak ze souboru, posouvá pozici v souboru).
@@ -43,7 +44,7 @@ Klíčem je operační kód instrukce a hodnotou je pole terminálních symbolů
 - *\n* - konec řádku
 - *type* - datový typ (int, string, bool)
 
-Pokud je vstupní token v pořádku, jsou načteny argumenty privátní metodou ``LoadArguments``, která podle aktuálního operačního kódu vybere položku slovníku ``OPCODES`` a v cyklu zkonroluje, zda posloupnost tokenů na vstupu odpovídá očekávaným argumentům instrukce. Je vytvořen objekt typu ``Argument``, a pokud je v pořádku (viz. [*argument.php*](readme1.md#argumentphp)), je uložen do pole argumentů, jinak program končí se syntaktickou chybou.
+Pokud je vstupní token v pořádku, jsou načteny argumenty privátní metodou ``LoadArguments``, která podle aktuálního operačního kódu vybere položku slovníku ``OPCODES`` a v cyklu zkonroluje, zda posloupnost tokenů na vstupu odpovídá očekávaným terminálním symbolům, reprezentující argumenty instrukce. Vytvořený objekt typu ``Argument`` je uložen do pole argumentů.
 
 ---
 ### [argument.php](argument.php)

@@ -2,7 +2,7 @@
 
 #defvar GF@ugugug
 
-.IPPcode21+2345*&^%$@$%^&*&^%$@!,ů.-ůú)§!)=p
+.IPPcode21
 
 defvar GF@counter
 MOVE GF@counter string@ # Inicializace proměnné na prázdný řetězec
