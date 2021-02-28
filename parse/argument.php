@@ -2,6 +2,7 @@
 
 include_once("scanner.php");
 
+/// Třída reprezentující argument instrukce jazyka IPPcode21.
 class Argument
 {
 	private $Type;
@@ -41,13 +42,13 @@ class Argument
 			case "type": $syntaxError = $this->Type != "type";
 				break;
 		}
-
 		if ($syntaxError)
 			ExitArgTypeError($this->Type, $this->Value, $syntaxSymbol, $token->Line, $token->Position);
 		
 		$this->Value = preg_replace("/^(string|int|bool|nil)@/", "", $this->Value);
 	}
 
+	/// Možné typy argumentů reprezentovány klíčem (regulární výraz) a hodnotou (jméno typu).
 	private const ARGTYPES = array
 	(
 		"/^int@(-|\+)?\d+$/" => "int",
@@ -59,6 +60,8 @@ class Argument
 		"/^([a-zA-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "label"
 	);
 
+	/// Zjistí, zda zadaný řetězec odpovídá některému z klíčů v poli ARGTYPES.
+	/// Vrací jméno typu nebo NULL.
 	public function ResolveArgumentType(string $string)
 	{
 		foreach (self::ARGTYPES as $pattern => $type)
@@ -69,6 +72,7 @@ class Argument
 		return NULL;
 	}
 
+	/// Vytiskne XML reprezentaci argumentu (s využitím knihovny XMLWriter).
 	public function Print(XMLWriter $xw)
 	{
 		$xw->startElement("arg$this->Order");

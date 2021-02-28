@@ -1,5 +1,8 @@
 <?php
 
+/// Funkce pro zpracování chyb parseru IPPcode21.
+/// Vypisuje na standardní chybový výstup.
+
 ini_set('display_errors', 'stderr');
 
 const ERROR_PARAMETER = 10;
@@ -12,17 +15,20 @@ const ERROR_OTHER = 23;
 
 const ERROR_INTERNAL = 99;
 
+/// Pomocná funkce pro výpis pozice v souboru.
 function ErrorLinePosition(int $line, int $position)
 {
 	fwrite(STDERR, "Řádek $line, Pozice $position: ");
 }
 
+/// Chyba při zpracování parametru programu.
 function ExitErrorParameter(string $param)
 {
 	fwrite(STDERR, "Chybný parametr programu: $param\n");
 	exit(ERROR_PARAMETER);
 }
 
+/// Chybná hlavička (načten jiný typ tokenu, špatný jazyk, ...).
 function ExitHeaderError(string $input, string $correctLang, int $line, int $position)
 {
 	ErrorLinePosition($line, $position);
@@ -30,6 +36,7 @@ function ExitHeaderError(string $input, string $correctLang, int $line, int $pos
 	exit(ERROR_HEADER);
 }
 
+/// Chyba typu vstupního argumentu, neodpovídá očekávanému terminálnímu symbolu.
 function ExitArgTypeError(string $inputType, string $inputValue, string $expectedType, int $line, int $position)
 {
 	$moreInfo = "";
@@ -41,6 +48,7 @@ function ExitArgTypeError(string $inputType, string $inputValue, string $expecte
 	exit(ERROR_OTHER);
 }
 
+/// Chyba typu vstupního tokenu, neodpovídá očekávanému typu.
 function ExitTokenTypeError($value, string $type, string $expectedType, int $line, int $position)
 {
 	if (is_array($value))
@@ -51,6 +59,7 @@ function ExitTokenTypeError($value, string $type, string $expectedType, int $lin
 	exit(ERROR_OTHER);
 }
 
+/// Chyba operačního kódu (načten neočekávaný token).
 function ExitOpcodeError($value, int $line, int $position)
 {
 	if (is_array($value))
@@ -61,6 +70,7 @@ function ExitOpcodeError($value, int $line, int $position)
 	exit(ERROR_OPCODE);
 }
 
+/// Chyba lexikálního analyzátoru, chyba ve vstupním souboru.
 function ExitLexicalError(string $word, int $line, int $position)
 {
 	ErrorLinePosition($line, $position);

@@ -1,4 +1,6 @@
-<?php # IPPcode21 parser (autor: Tomáš Milostný, xmilos02)
+<?php
+
+/// IPPcode21 parser (autor: Tomáš Milostný, xmilos02)
 
 include_once("error.php");
 

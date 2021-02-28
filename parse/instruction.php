@@ -1,12 +1,41 @@
-<?php # Pomocné struktury pro práci s instrukcemi jazyka IPPcode21
+<?php
 
 include_once("scanner.php");
 include_once("argument.php");
 include_once("error.php");
 
+/// Třída reprezentující instrukci jazyka IPPcode21.
 class Instruction
 {
-	//Operační kódy IPPcode21 a syntaxe jejich argumentů
+	private $Arguments = array();
+	private $Order;
+	private $Opcode;
+
+	public function __construct(Token $token, int $order, Scanner $scanner)
+	{
+		if ($token->Type != TokenType::OPCODE)
+			ExitOpcodeError($token->Attribute, $token->Line, $token->Position);
+
+		$this->Opcode = strtoupper($token->Attribute);
+		$this->Order = $order;
+		
+		foreach (self::OPCODES[$this->Opcode] as $term)
+		{
+			$token = $scanner->GetNextToken();
+
+			if ($term == "\n")
+			{
+				if ($token->Type != TokenType::EOL && $token->Type != TokenType::EOF)
+					ExitTokenTypeError($token->Attribute, $token->Type, TokenType::EOL, $token->Line, $token->Position);
+				continue;
+			}
+
+			$argument = new Argument($token, count($this->Arguments) + 1, $term);
+			array_push($this->Arguments, $argument);
+		}
+	}
+
+	/// Operační kódy IPPcode21 a terminální symboly syntaxe jejich argumentů.
 	private const OPCODES = array
 	(
 		//Práce s rámci, volání funkcí
@@ -61,39 +90,13 @@ class Instruction
 		"BREAK" => array( "\n" )
 	);
 
-	private $Arguments = array();
-	private $Order;
-	private $Opcode;
-
-	public function __construct(Token $token, int $order, Scanner $scanner)
+	/// Zjistí, zda je zadaný řetězec validní operační kód instrukce jazyka IPPcode21 (je klíčem v poli OPCODES).
+	public function IsOpcode(string $string)
 	{
-		if ($token->Type != TokenType::OPCODE)
-			ExitOpcodeError($token->Attribute, $token->Line, $token->Position);
-
-		$this->Opcode = strtoupper($token->Attribute);
-		$this->Order = $order;
-		
-		foreach (self::OPCODES[$this->Opcode] as $syntaxSymbol)
-		{
-			$token = $scanner->GetNextToken();
-
-			if ($syntaxSymbol == "\n")
-			{
-				if ($token->Type != TokenType::EOL && $token->Type != TokenType::EOF)
-					ExitTokenTypeError($token->Attribute, $token->Type, TokenType::EOL, $token->Line, $token->Position);
-				continue;
-			}
-
-			$argument = new Argument($token, count($this->Arguments) + 1, $syntaxSymbol);
-			array_push($this->Arguments, $argument);
-		}       
+		return array_key_exists(strtoupper($string), self::OPCODES);
 	}
 
-	public function IsOpcode($word)
-	{
-		return array_key_exists(strtoupper($word), self::OPCODES);
-	}
-
+	/// Vytiskne XML reprezentaci instrukce a jejích argumentů (s využitím knihovny XMLWriter).
 	public function Print(XMLWriter $xw)
 	{
 		$xw->startElement("instruction");
