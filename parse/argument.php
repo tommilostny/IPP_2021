@@ -43,12 +43,12 @@ class Argument
 	private const ARGTYPES = array
 	(
 		"/^int@(-|\+)?\d+$/" => "int",
-		"/^(bool@)((true)|(false))$/" => "bool",
-		"/^string@/" => "string",
-		"/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "var",
+		"/^bool@(true|false)$/" => "bool",
+		"/^string@(((\\\)\d\d\d)|[^\\\])*$/" => "string",
+		"/^(G|L|T)F@([a-zA-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "var",
 		"/^(int|bool|string)$/" => "type", 
 		"/^(nil@nil)$/" => "nil",
-		"/^([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "label"
+		"/^([a-zA-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "label"
 	);
 
 	public function ResolveArgumentType(string $string)
