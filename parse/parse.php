@@ -2,8 +2,7 @@
 
 include_once("error.php");
 
-//kontrola parametru --help
-if ($argc >= 2)
+if ($argc >= 2) //Kontrola parametru --help
 {
 	if ($argv[1] == "--help")
 	{
@@ -19,26 +18,28 @@ if ($argc >= 2)
 include_once("scanner.php");
 include_once("instruction.php");
 
-$scanner = new Scanner();
-
-//Načtení prvního tokenu a kontrola hlavičky (chybná hlavička -> kód 21)
-$token = $scanner->GetNextToken();
-if ($token->Type != TokenType::HEADER || $token->Attribute != SUPPORTED_LANG)
-{
-	ExitHeaderError();
-}
-
-$lang = $token->Attribute;
+$supportedLang = "IPPcode21";
+$scanner = new Scanner($supportedLang);
 $instructions = array();
+$headerLoaded = false;
+$order = 0;
 
-//Načtení instrukcí programu
-for ($order = 1; ($token = $scanner->GetNextToken())->Type != TokenType::EOF;)
+while (($token = $scanner->GetNextToken())->Type != TokenType::EOF)
 {
-	//přeskočit prázdné řádky
-	if ($token->Type == TokenType::EOL)
+	if ($token->Type == TokenType::EOL) //Přeskočit prázdné řádky/komentáře
 		continue;
 
-	$instruction = new Instruction($token, $order++, $scanner);
+	if (!$headerLoaded) //Načtení hlavičky
+	{
+		if ($token->Type != TokenType::HEADER)
+			ExitHeaderError($token->Attribute, $supportedLang);
+
+		$headerLoaded = true;
+		continue;
+	}
+
+	//Načtení instrukce programu
+	$instruction = new Instruction($token, ++$order, $scanner);
 	array_push($instructions, $instruction);
 }
 
@@ -47,7 +48,7 @@ $xw = new XMLWriter();
 $xw->openMemory();
 $xw->startDocument("1.0", "UTF-8");
 $xw->startElement("program");
-$xw->writeAttribute("language", $lang);
+$xw->writeAttribute("language", $supportedLang);
 
 foreach ($instructions as $instruction)
 	$instruction->Print($xw);

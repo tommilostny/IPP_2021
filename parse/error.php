@@ -3,9 +3,6 @@
 ini_set('display_errors', 'stderr');
 include_once("scanner.php");
 
-//Podporovaný jazyk IPP
-const SUPPORTED_LANG = "IPPcode21";
-
 //Chybové kódy
 const ERROR_PARAMETER = 10;
 const ERROR_INPUT_FILE = 11;
@@ -28,9 +25,9 @@ function ErrorLinePosition(Token $token)
 	fwrite(STDERR, "Řádek $token->Line, Pozice $token->Position: ");
 }
 
-function ExitHeaderError()
+function ExitHeaderError(string $input, string $correctLang)
 {
-	fwrite(STDERR, "Chybná hlavička. Nutno specifikovat podporovaný jazyk \"". SUPPORTED_LANG . "\".\n");
+	fwrite(STDERR, "Chybná hlavička \"$input\".\nNutno specifikovat podporovaný jazyk \".$correctLang\".\n");
 	exit(ERROR_HEADER);
 }
 

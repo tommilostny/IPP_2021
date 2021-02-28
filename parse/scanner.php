@@ -26,6 +26,12 @@ class Scanner
 	private $File = STDIN;
 	private $Line = 1;
 	private $Position = 0;
+	private $Language;
+
+	public function __construct(string $lang)
+	{
+		$this->Language = $lang;
+	}
 
 	public function GetNextToken()
 	{
@@ -34,32 +40,29 @@ class Scanner
 			$token->Line = $this->Line;
 			$token->Position = $this->Position;
 
-			switch ($word = $this->LoadWord())
+			if (($word = $this->LoadWord()) == "\n")
 			{
-			case ".":
-				$token->Type = TokenType::HEADER;
-				$token->Attribute = $this->LoadWord();
-				break;
-			case "\n":
 				$token->Type = TokenType::EOL;
-				break;
-			default:
-				if (Instruction::IsOpcode($word))
-				{
-					$token->Type = TokenType::OPCODE;
-					$token->Attribute = strtoupper($word);
-				}
-				else if (($type = Argument::ResolveArgumentType($word)) != NULL)
-				{
-					$token->Type = TokenType::ARGUMENT;
-					$token->Attribute = array($type, preg_replace("/^(string|int|bool|nil)@/", "", $word));
-				}
-				else if (!$this->EofCheckSet($token))
-				{
-					$token->Type = TokenType::LEX_ERROR;
-					$token->Attribute = $word;
-				}
-				break;
+			}
+			else if (preg_match("/^\.$this->Language$/", $word))
+			{
+				$token->Type = TokenType::HEADER;
+				$token->Attribute = $this->Language;
+			}
+			else if (Instruction::IsOpcode($word))
+			{
+				$token->Type = TokenType::OPCODE;
+				$token->Attribute = strtoupper($word);
+			}
+			else if (($type = Argument::ResolveArgumentType($word)) != NULL)
+			{
+				$token->Type = TokenType::ARGUMENT;
+				$token->Attribute = array($type, preg_replace("/^(string|int|bool|nil)@/", "", $word));
+			}
+			else if (!$this->EofCheckSet($token))
+			{
+				$token->Type = TokenType::LEX_ERROR;
+				$token->Attribute = $word;
 			}
 		}
 		return $token;

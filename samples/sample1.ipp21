@@ -1,4 +1,9 @@
-. IPPcode21
+#TOTO je můj kód
+
+#defvar GF@ugugug
+
+.IPPcode21+2345*&^%$@$%^&*&^%$@!,ů.-ůú)§!)=p
+
 defvar GF@counter
 MOVE GF@counter string@ # Inicializace proměnné na prázdný řetězec
 # Jednoduchá iterace , dokud nebude splněna zadaná podmínka

@@ -4,22 +4,11 @@ include_once("scanner.php");
 
 class Argument
 {
-	private const ARGTYPES = array
-	(
-		"/^int@(-|\+)?\d+/" => "int",
-		"/^(bool@)((true)|(false))$/" => "bool",
-		"/^string@/" => "string",
-		"/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "var",
-		"/^(int|bool|string)$/" => "type", 
-		"/^(nil@nil)$/" => "nil",
-		"/^([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "label"
-	);
-
-	private const SYMBS = array("int", "bool", "string", "nil", "var");
-
 	private $Type;
 	private $Value;
 	private $Order;
+
+	private const SYMBS = array("int", "bool", "string", "nil", "var");
 
 	public function __construct(Token $token, int $order, string $syntaxSymbol)
 	{
@@ -50,6 +39,17 @@ class Argument
 			break;
 		}
 	}
+
+	private const ARGTYPES = array
+	(
+		"/^int@(-|\+)?\d+$/" => "int",
+		"/^(bool@)((true)|(false))$/" => "bool",
+		"/^string@/" => "string",
+		"/^(G|L|T)F@([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "var",
+		"/^(int|bool|string)$/" => "type", 
+		"/^(nil@nil)$/" => "nil",
+		"/^([a-z]|[A-Z]|\d|_|-|\\$|&|%|\*|!|\?)+$/" => "label"
+	);
 
 	public function ResolveArgumentType(string $string)
 	{
