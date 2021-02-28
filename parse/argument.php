@@ -8,17 +8,28 @@ class Argument
 	private $Value;
 	private $Order;
 
-	private const SYMBS = array("int", "bool", "string", "nil", "var");
-
 	public function __construct(Token $token, int $order, string $syntaxSymbol)
 	{
-		if ($token->Type != TokenType::ARGUMENT)
-			ExitOtherError($token->Attribute);
+		//Token operačního kódu instrukce -> argument typu návěští
+		$labelOpcodeException = $syntaxSymbol == "label" && $token->Type == TokenType::OPCODE;
 
-		$this->Type = $token->Attribute[0];
-		$this->Value = $token->Attribute[1];
+		if (!$labelOpcodeException)
+		{
+			//kontrola běžného typu argumentu
+			if ($token->Type != TokenType::ARGUMENT)
+				ExitOtherError($token->Attribute);
+
+			$this->Type = $token->Attribute[0];
+			$this->Value = $token->Attribute[1];
+		}
+		else //opcode návěští
+		{
+			$this->Type = "label";
+			$this->Value = $token->Attribute;
+		}
 		$this->Order = $order;
 
+		//Kontrola zda očekáváný terminální symbol odpovídá realitě
 		switch ($syntaxSymbol)
 		{
 		case "var":
@@ -26,7 +37,7 @@ class Argument
 				ExitOtherError($this->Type);
 			break;
 		case "symb":
-			if (!in_array($this->Type, self::SYMBS))
+			if (!in_array($this->Type, array("int", "bool", "string", "nil", "var")))
 				ExitOtherError($this->Type);
 			break;
 		case "label":

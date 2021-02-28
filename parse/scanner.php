@@ -52,7 +52,7 @@ class Scanner
 			else if (Instruction::IsOpcode($word))
 			{
 				$token->Type = TokenType::OPCODE;
-				$token->Attribute = strtoupper($word);
+				$token->Attribute = $word;
 			}
 			else if (($type = Argument::ResolveArgumentType($word)) != NULL)
 			{

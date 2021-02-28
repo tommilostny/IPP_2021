@@ -70,7 +70,7 @@ class Instruction
 		if ($token->Type != TokenType::OPCODE)
 			ExitOpcodeError($token);
 
-		$this->Opcode = $token->Attribute;
+		$this->Opcode = strtoupper($token->Attribute);
 		$this->Order = $order;
 		$this->LoadArguments($scanner);        
 	}
