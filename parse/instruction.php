@@ -80,16 +80,16 @@ class Instruction
 		foreach (self::OPCODES[$this->Opcode] as $syntaxSymbol)
 		{
 			$token = $scanner->GetNextToken();
+
 			if ($syntaxSymbol == "\n")
 			{
 				if ($token->Type != TokenType::EOL && $token->Type != TokenType::EOF)
 					ExitOtherError($token->Attribute);
+				continue;
 			}
-			else
-			{
-				$argument = new Argument($token, count($this->Arguments) + 1, $syntaxSymbol);
-				array_push($this->Arguments, $argument);
-			}
+
+			$argument = new Argument($token, count($this->Arguments) + 1, $syntaxSymbol);
+			array_push($this->Arguments, $argument);
 		}
 	}
 

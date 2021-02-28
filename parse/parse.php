@@ -22,7 +22,6 @@ $supportedLang = "IPPcode21";
 $scanner = new Scanner($supportedLang);
 $instructions = array();
 $headerLoaded = false;
-$order = 0;
 
 while (($token = $scanner->GetNextToken())->Type != TokenType::EOF)
 {
@@ -39,7 +38,7 @@ while (($token = $scanner->GetNextToken())->Type != TokenType::EOF)
 	}
 
 	//Načtení instrukce programu
-	$instruction = new Instruction($token, ++$order, $scanner);
+	$instruction = new Instruction($token, count($instructions) + 1, $scanner);
 	array_push($instructions, $instruction);
 }
 
