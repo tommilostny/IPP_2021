@@ -17,7 +17,7 @@ class Argument
 		{
 			//kontrola běžného typu argumentu
 			if ($token->Type != TokenType::ARGUMENT)
-				ExitOtherError($token->Attribute);
+				ExitTokenTypeError($token->Attribute, $token->Type, TokenType::ARGUMENT, $token->Line, $token->Position);
 
 			$this->Type = $token->Attribute[0];
 			$this->Value = $token->Attribute[1];
@@ -32,23 +32,20 @@ class Argument
 		//Kontrola zda očekáváný terminální symbol odpovídá realitě
 		switch ($syntaxSymbol)
 		{
-		case "var":
-			if ($this->Type != "var")
-				ExitOtherError($this->Type);
-			break;
-		case "symb":
-			if (!in_array($this->Type, array("int", "bool", "string", "nil", "var")))
-				ExitOtherError($this->Type);
-			break;
-		case "label":
-			if ($this->Type != "label")
-				ExitOtherError($this->Type);
-			break;
-		case "type":
-			if ($this->Type != "type")
-				ExitOtherError($this->Type);
-			break;
+			case "var": $syntaxError = $this->Type != "var";
+				break;
+			case "symb": $syntaxError = !in_array($this->Type, array("int", "bool", "string", "nil", "var"));
+				break;
+			case "label": $syntaxError = $this->Type != "label";
+				break;
+			case "type": $syntaxError = $this->Type != "type";
+				break;
 		}
+
+		if ($syntaxError)
+			ExitArgTypeError($this->Type, $this->Value, $syntaxSymbol, $token->Line, $token->Position);
+		
+		$this->Value = preg_replace("/^(string|int|bool|nil)@/", "", $this->Value);
 	}
 
 	private const ARGTYPES = array

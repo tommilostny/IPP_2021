@@ -31,7 +31,7 @@ while (($token = $scanner->GetNextToken())->Type != TokenType::EOF)
 	if (!$headerLoaded) //Načtení hlavičky
 	{
 		if ($token->Type != TokenType::HEADER)
-			ExitHeaderError($token->Attribute, $supportedLang);
+			ExitHeaderError($token->Attribute, $supportedLang, $token->Line, $token->Position);
 
 		$headerLoaded = true;
 		continue;

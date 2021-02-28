@@ -18,4 +18,4 @@ LABEL end
 
 pushs int@23
 pops GF@counter
-break
+RETURN

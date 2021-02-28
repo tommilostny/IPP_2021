@@ -2,15 +2,15 @@
 
 include_once("instruction.php");
 include_once("argument.php");
+include_once("error.php");
 
 class TokenType
 {
-	public const EOL = -2;
-	public const EOF = -1;
-	public const HEADER = 0;
-	public const OPCODE = 1;
-	public const ARGUMENT = 2;
-	public const LEX_ERROR = 3;
+	public const EOL = "Konec řádku";
+	public const EOF = "Konec souboru";
+	public const HEADER = "Hlavička";
+	public const OPCODE = "Operační kód instrukce";
+	public const ARGUMENT = "Argument";
 }
 
 class Token
@@ -57,12 +57,11 @@ class Scanner
 			else if (($type = Argument::ResolveArgumentType($word)) != NULL)
 			{
 				$token->Type = TokenType::ARGUMENT;
-				$token->Attribute = array($type, preg_replace("/^(string|int|bool|nil)@/", "", $word));
+				$token->Attribute = array($type, $word);
 			}
 			else if (!$this->EofCheckSet($token))
 			{
-				$token->Type = TokenType::LEX_ERROR;
-				$token->Attribute = $word;
+				ExitLexicalError($word, $token->Line, $token->Position);
 			}
 		}
 		return $token;
@@ -79,6 +78,7 @@ class Scanner
 			{
 				fseek($this->File, -1, SEEK_CUR);
 				$inComment = false;
+				$this->Line--;
 			}
 			else if ($read == "#")
 				$inComment = true;
@@ -101,8 +101,10 @@ class Scanner
 
 		//konec slova je na konci řádku nebo nalezen začátek komentáře -> příští token bude typu EOL
 		if (($read == "\n" && strlen($string) > 1) || $read == "#")
+		{
 			fseek($this->File, -1, SEEK_CUR);
-
+			$this->Line--;
+		}
 		return $string;
 	}
 

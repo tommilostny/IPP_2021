@@ -68,15 +68,11 @@ class Instruction
 	public function __construct(Token $token, int $order, Scanner $scanner)
 	{
 		if ($token->Type != TokenType::OPCODE)
-			ExitOpcodeError($token);
+			ExitOpcodeError($token->Attribute, $token->Line, $token->Position);
 
 		$this->Opcode = strtoupper($token->Attribute);
 		$this->Order = $order;
-		$this->LoadArguments($scanner);        
-	}
-
-	private function LoadArguments(Scanner $scanner)
-	{
+		
 		foreach (self::OPCODES[$this->Opcode] as $syntaxSymbol)
 		{
 			$token = $scanner->GetNextToken();
@@ -84,13 +80,13 @@ class Instruction
 			if ($syntaxSymbol == "\n")
 			{
 				if ($token->Type != TokenType::EOL && $token->Type != TokenType::EOF)
-					ExitOtherError($token->Attribute);
+					ExitTokenTypeError($token->Attribute, $token->Type, TokenType::EOL, $token->Line, $token->Position);
 				continue;
 			}
 
 			$argument = new Argument($token, count($this->Arguments) + 1, $syntaxSymbol);
 			array_push($this->Arguments, $argument);
-		}
+		}       
 	}
 
 	public function IsOpcode($word)
