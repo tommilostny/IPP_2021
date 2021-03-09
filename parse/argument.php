@@ -12,9 +12,7 @@ class Argument
 	public function __construct(Token $token, int $order, string $syntaxSymbol)
 	{
 		//Token operačního kódu instrukce -> argument typu návěští
-		$labelOpcodeException = $syntaxSymbol == "label" && $token->Type == TokenType::OPCODE;
-
-		if (!$labelOpcodeException)
+		if (!($syntaxSymbol == "label" && $token->Type == TokenType::OPCODE))
 		{
 			//kontrola běžného typu argumentu
 			if ($token->Type != TokenType::ARGUMENT)

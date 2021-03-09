@@ -19,19 +19,21 @@ class Instruction
 		$this->Opcode = strtoupper($token->Attribute);
 		$this->Order = $order;
 		
+		//Kontrola syntaktických terminálních symbolů dle operačního kódu
 		foreach (self::OPCODES[$this->Opcode] as $term)
 		{
 			$token = $scanner->GetNextToken();
 
-			if ($term == "\n")
+			if ($term == "\n") //Konec instrukce -> konec řádku/souboru
 			{
 				if ($token->Type != TokenType::EOL && $token->Type != TokenType::EOF)
 					ExitTokenTypeError($token->Attribute, $token->Type, TokenType::EOL, $token->Line, $token->Position);
-				continue;
 			}
-
-			$argument = new Argument($token, count($this->Arguments) + 1, $term);
-			array_push($this->Arguments, $argument);
+			else //Vytvoření objektu argumentu instrukce, další kontroly uvnitř
+			{
+				$argument = new Argument($token, count($this->Arguments) + 1, $term);
+				array_push($this->Arguments, $argument);
+			}
 		}
 	}
 

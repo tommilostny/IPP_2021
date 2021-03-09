@@ -75,7 +75,7 @@ function ExitLexicalError(string $word, int $line, int $position)
 {
 	ErrorLinePosition($line, $position);
 	fwrite(STDERR, "Lexikální chyba: \"$word\".\n");
-	exit(ERROR_OPCODE);
+	exit(ERROR_OTHER);
 }
 
 ?>
