@@ -1,0 +1,37 @@
+# nacteni vstupu a vypis
+.IPPcode21 # nacteni vstupu a vypis
+MOVE GF@counter string@AAA
+CREATEFRAME
+PUSHFRAME
+POPFRAME
+DEFVAR GF@counter
+CALL label-text
+RETURN
+PUSHS string@AAA
+POPS GF@counter
+ADD GF@counter int@123 string@CCC
+SUB GF@counter bool@true string@CCC
+MUL GF@counter string@BBB nil@nil
+IDIV GF@counter string@BBB string@CCC
+EQ GF@counter string@BBB string@CCC
+GT GF@counter string@BBB string@CCC
+LT GF@counter string@BBB string@CCC
+AND GF@counter string@BBB string@CCC
+OR GF@counter string@BBB string@CCC
+NOT GF@counter string@BBB string@CCC
+INT2CHAR GF@counter string@AAA
+STRI2INT GF@counter string@BBB string@CCC
+READ GF@counter string
+WRITE string@AAA
+CONCAT GF@counter string@BBB string@CCC
+STRLEN GF@counter string@AAA
+GETCHAR GF@counter string@BBB string@CCC
+SETCHAR GF@counter string@BBB string@CCC
+TYPE GF@counter string@AAA
+LABEL label-text
+JUMP label-text
+JUMPIFEQ label-text string@BBB string@CCC
+JUMPIFNEQ label-text string@BBB string@CCC
+EXIT string@AAA
+DPRINT string@AAA
+BREAK

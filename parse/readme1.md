@@ -12,7 +12,7 @@ Zpracovává parametr ``--help``:
 
 Jestliže nebyl zadán žádný parametr, program pokračuje načítáním vstupního programu následujícím způsobem:
 
-1. V hlavní smyčce se předá řízení lexikálnímu analyzátoru ``Scanner``, který prvně zkontroluje hlavičku programu specifikující jazyk programu ve formátu *"``.IFJcode21``"*. Jestliže na vstupu hlavička není, nebo je ve špatném formátu, program zde skončí s chybou.
+1. V hlavní smyčce se předá řízení lexikálnímu analyzátoru ``Scanner``, který prvně zkontroluje hlavičku programu specifikující jazyk programu ve formátu *"``.IPPcode21``"*. Jestliže na vstupu hlavička není, nebo je ve špatném formátu, program zde skončí s chybou.
 
 2. Následně se načítají instrukce programu do pole objektů typu ``Instruction``, které si dále načítají a kontrolují syntaxi svých argumentů.
 
