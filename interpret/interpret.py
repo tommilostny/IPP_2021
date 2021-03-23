@@ -33,17 +33,27 @@ def check_program_language(program:XmlParser.Element):
 
 def parse_xml(file_name:str):
 	program = load_xml_from_file(file_name) if file_name is not None else load_xml_from_stdin()
+	instructions = []
 	
 	if program is not None and check_program_language(program):
-		print(f"{program.tag} has attribute(s) {program.attrib}") ##TODO: loop loading instructions, return them
 		for instruction in program:
-			print(f"{instruction.tag} has attribute(s) {instruction.attrib}")
-			for argument in instruction:
-				print(f"\t{argument.tag} has attribute(s) {argument.attrib} and value:\t{argument.text}")
+			try:
+				instructions.append(Instruction.decode_opcode(instruction))
+			except Exception as e:
+				stderr.write(f"{e}\n")
+				return None
+	instructions.sort(key=lambda x: x.order)
+	return instructions
 
 
-#args = parse_arguments()
-#instructions = parse_xml(args.source)
+args = parse_arguments()
+instructions = parse_xml(args.source)
 
-instr = Write(1)
-instr.invoke()
+if instructions is not None:
+###test loop, remove later, silly ;)
+	for i in instructions:
+		print(type(i), i.order, end=" ")
+		for a in i.arguments:
+			print(a.type, a.value, end=", ")
+		#i.invoke()
+		print()
