@@ -3,3 +3,4 @@ hw.php
 *.sh
 *.zip
 lects/
+__pycache__/

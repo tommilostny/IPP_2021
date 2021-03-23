@@ -2,6 +2,8 @@ import xml.etree.ElementTree as XmlParser
 from argparse import ArgumentParser
 from sys import stderr
 
+from instruction import *
+
 
 def parse_arguments():
 	parser = ArgumentParser()
@@ -40,5 +42,8 @@ def parse_xml(file_name:str):
 				print(f"\t{argument.tag} has attribute(s) {argument.attrib} and value:\t{argument.text}")
 
 
-args = parse_arguments()
-instructions = parse_xml(args.source)
+#args = parse_arguments()
+#instructions = parse_xml(args.source)
+
+instr = Write(1)
+instr.invoke()
