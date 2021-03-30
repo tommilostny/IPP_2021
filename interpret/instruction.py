@@ -1,5 +1,4 @@
 from sys import exit, stderr
-from typing import List
 from xml.etree.ElementTree import Element
 
 from argument import Argument
@@ -11,7 +10,7 @@ temporary_frame = None
 class Instruction:
     def __init__(self, element:Element):
         self.order = int(element.attrib["order"])
-        self.arguments = List[Argument]()
+        self.arguments = []
         for argument in element:
             self.arguments.append(Argument(argument))
 
@@ -42,6 +41,28 @@ class PopFrame(Instruction):
         except IndexError:
             stderr.write(f"POPFRAME (order: {self.order}): No local frame available.\n")
             exit(55)
+
+class Defvar(Instruction):
+    def invoke(self):
+        global global_frame, local_frames, temporary_frame
+        if self.arguments[0].type == "var":
+            frame, _, varname = self.arguments[0].value.partition("@")
+
+            if frame == "GF" and varname not in global_frame.keys():
+                global_frame[varname] = None
+
+            elif frame == "LF" and len(local_frames) and varname not in local_frames[-1].keys():
+                local_frames[-1][varname] = None
+
+            elif frame == "TF" and temporary_frame is not None and varname not in temporary_frame.keys():
+                temporary_frame[varname] = None
+
+            else:
+                stderr.write(f"DEFVAR: (order: {self.order}): Invalid variable \"{self.arguments[0].value}\"\n")
+                exit(52)
+        else:
+            stderr.write(f"DEFVAR: (order: {self.order}): Bad argument type \"{self.arguments[0].type}\"\n")
+            exit(52)
 
 class Write(Instruction):
     def invoke(self):

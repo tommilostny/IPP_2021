@@ -10,7 +10,7 @@ OPCODES = {
     "CREATEFRAME" : CreateFrame,
     "PUSHFRAME" : PushFrame,
     "POPFRAME" : PopFrame,
-    #"DEFVAR" : Defvar,
+    "DEFVAR" : Defvar,
     #"CALL" : Call,
     #"RETURN" : Return,
 
