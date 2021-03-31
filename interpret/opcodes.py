@@ -6,7 +6,7 @@ def decode_opcode(instr_element:Element) -> Instruction:
 
 OPCODES = {
     #Práce s rámci, volání funkcí
-    #"MOVE" : Move,
+    "MOVE" : Move,
     "CREATEFRAME" : CreateFrame,
     "PUSHFRAME" : PushFrame,
     "POPFRAME" : PopFrame,

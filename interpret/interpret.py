@@ -59,8 +59,8 @@ if __name__ == "__main__":
 	if instructions is not None:
 	###test loop, remove later, silly ;)
 		for i in instructions:
-			print(type(i), i.order, end=" ")
-			for a in i.arguments:
-				print(a.type, a.value, end=", ")
-			#i.invoke()
-			print()
+			#print(type(i), i.order, end=" ")
+			#for a in i.arguments:
+			#	print(a.type, a.value, end=", ")
+			i.invoke()
+			#print()
