@@ -18,13 +18,29 @@ class Argument:
             
             elif self.type == "nil":
                 self.value = None
+
+            else: self.value = element.text
                 
         except Exception as e:
             raise Exception(f"{element.tag}: No attribute {e}, just {element.attrib}.")
 
 
-def parse_string_arg(string:str) -> str: #TODO
+def parse_string_arg(string:str) -> str:
     if string is None:
         return ""
     else:
-        return string
+        result = ""
+        loading_escape_sequence = False
+        for char in string:
+            if not loading_escape_sequence:
+                if char == "\\":
+                    loading_escape_sequence = True
+                    ascii = ""
+                else:
+                    result += char
+            else:
+                ascii += char
+                if len(ascii) == 3:
+                    result += chr(int(ascii))
+                    loading_escape_sequence = False
+        return result
