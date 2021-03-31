@@ -5,3 +5,6 @@ DEFVAR TF@a
 MOVE TF@a string@Hello\032World!
 WRITE TF@a
 WRITE string@\010
+
+WRITE int@42
+WRITE string@!\010
