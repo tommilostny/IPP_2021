@@ -1,11 +1,9 @@
 from sys import exit, stderr
 from xml.etree.ElementTree import Element
 
+import frames
 from argument import Argument
 
-global_frame = {}
-local_frames = []
-temporary_frame = None
 
 class Instruction:
     def __init__(self, element:Element):
@@ -19,70 +17,24 @@ class Instruction:
         ...
 
 
-def set_variable(instr_name:str, instr_order:int, type:str, var:str, value):
-    global global_frame, local_frames, temporary_frame
-    if type == "var":
-        frame, _, varname = var.partition("@")
-
-        if frame == "GF":
-            global_frame[varname] = value
-
-        elif frame == "LF" and len(local_frames):
-            local_frames[-1][varname] = value
-
-        elif frame == "TF" and temporary_frame is not None:
-            temporary_frame[varname] = value
-
-        else:
-            stderr.write(f"{instr_name}: (order: {instr_order}): Invalid variable \"{var}\"\n")
-            exit(52)
-    else:
-        stderr.write(f"{instr_name}: (order: {instr_order}): Bad argument type \"{type}\"\n")
-        exit(52)
-
-
-def get_variable(instr_name:str, instr_order:int, type:str, var:str):
-    global global_frame, local_frames, temporary_frame
-    if type == "var":
-        frame, _, varname = var.partition("@")
-
-        if frame == "GF" and varname in global_frame.keys():
-            value = global_frame[varname]
-
-        elif frame == "LF" and len(local_frames) and varname in local_frames[-1].keys():
-            value = local_frames[-1][varname]
-
-        elif frame == "TF" and temporary_frame is not None and varname in temporary_frame.keys():
-            value = temporary_frame[varname]
-
-        else:
-            stderr.write(f"{instr_name}: (order: {instr_order}): Invalid variable \"{var}\"\n")
-            exit(52)
-
-        return value
-    return None
-
-
 class Move(Instruction):
     def invoke(self):
-        value = get_variable("MOVE", self.order, self.arguments[1].type, self.arguments[1].value)
+        value = frames.get_variable("MOVE", self.order, self.arguments[1].type, self.arguments[1].value)
         if value is None:
             value = self.arguments[1].value
-        set_variable("MOVE", self.order, self.arguments[0].type, self.arguments[0].value, value)
+        frames.set_variable("MOVE", self.order, self.arguments[0].type, self.arguments[0].value, value)
 
 
 class CreateFrame(Instruction):
     def invoke(self):
-        global temporary_frame
-        temporary_frame = {}
+        frames.temporary_frame = {}
 
 
 class PushFrame(Instruction):
     def invoke(self):
-        global temporary_frame, local_frames
-        if temporary_frame is not None:
-            local_frames.append(temporary_frame)
-            temporary_frame = None
+        if frames.temporary_frame is not None:
+            frames.local_frames.append(frames.temporary_frame)
+            frames.temporary_frame = None
         else:
             stderr.write(f"PUSHFRAME (order: {self.order}): Attempt to access undefined temporary frame.\n")
             exit(55)
@@ -90,9 +42,8 @@ class PushFrame(Instruction):
 
 class PopFrame(Instruction):
     def invoke(self):
-        global temporary_frame, local_frames
         try:
-            temporary_frame = local_frames.pop()
+            frames.temporary_frame = frames.local_frames.pop()
         except IndexError:
             stderr.write(f"POPFRAME (order: {self.order}): No local frame available.\n")
             exit(55)
@@ -100,7 +51,7 @@ class PopFrame(Instruction):
 
 class Defvar(Instruction):
     def invoke(self):
-        set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, None)
+        frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, None)
 
 
 class Write(Instruction):
@@ -110,6 +61,6 @@ class Write(Instruction):
         elif self.arguments[0].type == "nil":
             print("", end="")
         elif self.arguments[0].type == "var":
-            print(get_variable("WRITE", self.order, self.arguments[0].type, self.arguments[0].value), end="")
+            print(frames.get_variable("WRITE", self.order, self.arguments[0].type, self.arguments[0].value), end="")
         else:
             print(self.arguments[0].value, end="")
