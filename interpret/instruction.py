@@ -18,6 +18,10 @@ class Instruction:
 
 
 class Move(Instruction):
+    def __init__(self, element: Element):
+        #TODO: arguments syntax check? number, types?
+        super().__init__(element)
+
     def invoke(self):
         value = frames.get_variable("MOVE", self.order, self.arguments[1].type, self.arguments[1].value)
         if value is None:
@@ -51,7 +55,7 @@ class PopFrame(Instruction):
 
 class Defvar(Instruction):
     def invoke(self):
-        frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, None)
+        frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, def_check=True, value=None)
 
 
 class Write(Instruction):
