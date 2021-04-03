@@ -1,4 +1,5 @@
 from sys import exit, stderr
+from typing import List
 from xml.etree.ElementTree import Element
 
 import frames
@@ -6,16 +7,15 @@ from argument import Argument
 
 
 class Instruction:
-    def __init__(self, element:Element, syntax:list):
+    def __init__(self, element:Element, syntax_symbols:List[str]):
         self.order = int(element.attrib["order"])
         self.name = type(self).__name__.upper()
         self.arguments = []
 
         for argument in element:
-            self.arguments.append(Argument(argument, syntax[len(self.arguments)]))
-        if len(self.arguments) != len(syntax):
-            stderr.write(f"{self.name}: (order: {self.order}): Not enought instruction arguments. (syntax: {syntax})\n")
-            exit(53)
+            self.arguments.append(Argument(argument, syntax_symbols[len(self.arguments)]))
+        if len(self.arguments) != len(syntax_symbols):
+            raise SyntaxError(f"Not enought instruction arguments. (syntax: {syntax_symbols})")
 
     def invoke(self):
         """Specific instruction implementation will be invoked here."""
@@ -29,10 +29,6 @@ class Instruction:
 
 
 class Move(Instruction):
-    def __init__(self, element: Element):
-        #TODO: arguments syntax check? number, types?
-        super().__init__(element)
-
     def invoke(self):
         value = self.get_var_or_literal_value(1)
         frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)
