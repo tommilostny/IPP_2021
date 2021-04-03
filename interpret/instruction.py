@@ -95,7 +95,11 @@ class Mul(Instruction):
 
 class IDiv(Instruction):
     def invoke(self):
-        result = self.get_var_or_literal_value(1) // self.get_var_or_literal_value(2)
+        try:
+            result = self.get_var_or_literal_value(1) // self.get_var_or_literal_value(2)
+        except ZeroDivisionError:
+            stderr.write(f"{self.name} (order: {self.order}): Division by zero.\n")
+            exit(57)
         frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
 
 
