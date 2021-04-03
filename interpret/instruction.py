@@ -77,26 +77,49 @@ class Pops(Instruction):
 
 class Add(Instruction):
     def invoke(self):
-        result = self.get_var_or_literal_value(1) + self.get_var_or_literal_value(2)
+        try:
+            num1 = int(self.get_var_or_literal_value(1))
+            num2 = int(self.get_var_or_literal_value(2))
+        except ValueError:
+            stderr.write(f"{self.name} (order: {self.order}): Invalid operand type (all must be integers).\n")
+            exit(53)
+        result = num1 + num2
         frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
 
 
 class Sub(Instruction):
     def invoke(self):
-        result = self.get_var_or_literal_value(1) - self.get_var_or_literal_value(2)
+        try:
+            num1 = int(self.get_var_or_literal_value(1))
+            num2 = int(self.get_var_or_literal_value(2))
+        except ValueError:
+            stderr.write(f"{self.name} (order: {self.order}): Invalid operand type (all must be integers).\n")
+            exit(53)
+        result = num1 - num2
         frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
 
 
 class Mul(Instruction):
     def invoke(self):
-        result = self.get_var_or_literal_value(1) * self.get_var_or_literal_value(2)
+        try:
+            num1 = int(self.get_var_or_literal_value(1))
+            num2 = int(self.get_var_or_literal_value(2))
+        except ValueError:
+            stderr.write(f"{self.name} (order: {self.order}): Invalid operand type (all must be integers).\n")
+            exit(53)
+        result = num1 * num2
         frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
 
 
 class IDiv(Instruction):
     def invoke(self):
         try:
-            result = self.get_var_or_literal_value(1) // self.get_var_or_literal_value(2)
+            num1 = int(self.get_var_or_literal_value(1))
+            num2 = int(self.get_var_or_literal_value(2))
+            result = num1 // num2
+        except ValueError:
+            stderr.write(f"{self.name} (order: {self.order}): Invalid operand type (all must be integers).\n")
+            exit(53)
         except ZeroDivisionError:
             stderr.write(f"{self.name} (order: {self.order}): Division by zero.\n")
             exit(57)
