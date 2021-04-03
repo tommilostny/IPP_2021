@@ -55,7 +55,7 @@ class PopFrame(Instruction):
 
 class Defvar(Instruction):
     def invoke(self):
-        frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, def_check=True, value=None)
+        frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, defined_check=True, value=None)
 
 
 class Write(Instruction):
