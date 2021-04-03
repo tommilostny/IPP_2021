@@ -23,7 +23,7 @@ class Instruction:
 
     def get_var_or_literal_value(self, arg_index:int):
         value = frames.get_variable(self.name, self.order, self.arguments[arg_index].type, self.arguments[arg_index].value)
-        if value is None:
+        if value is None and self.arguments[arg_index].type != "var":
             value = self.arguments[arg_index].value
         return value
 
@@ -67,12 +67,17 @@ class Pushs(Instruction):
     stack = []
 
     def invoke(self):
-        self.stack.append(self.arguments[0].value)
+        self.stack.append(self.get_var_or_literal_value(0))
 
 
 class Pops(Instruction):
     def invoke(self):
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value=Pushs.stack.pop())
+        if len(Pushs.stack) > 0:
+            value = Pushs.stack.pop()
+            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)
+        else:
+            stderr.write(f"{self.name} (order: {self.order}): Stack is empty.\n")
+            exit(56)
 
 
 class Add(Instruction):
