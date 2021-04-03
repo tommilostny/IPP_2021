@@ -1,6 +1,7 @@
 .IPPcode21
 
-#CREATEFRAME
+CREATEFRAME
+
 #DEFVAR TF@a
 #MOVE TF@a string@Hello\032World!
 #WRITE TF@a
@@ -8,7 +9,7 @@
 #
 #PUSHFRAME
 #
-DEFVAR GF@a
+#DEFVAR GF@a
 #MOVE GF@a int@42
 #
 #WRITE string@Global\032a:\032
@@ -24,7 +25,16 @@ DEFVAR GF@a
 #WRITE TF@a
 #WRITE string@\010
 
-PUSHS string@StackTest
-POPS GF@a
-WRITE GF@a
+DEFVAR TF@num1
+DEFVAR TF@num2
+DEFVAR TF@result
+PUSHS int@16
+PUSHS int@7
+POPS TF@num1
+POPS TF@num2
+ADD TF@result TF@num1 TF@num2
+SUB TF@result TF@result int@3
+MUL TF@result TF@result int@5
+IDIV TF@result TF@result int@10
+WRITE TF@result
 WRITE string@\010

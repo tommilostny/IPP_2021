@@ -19,10 +19,10 @@ OPCODES = {
     "POPS" : Pops,
 
     #Aritmetické, relační, booleovské a konverzní instrukce
-    #"ADD" : Add,
-    #"SUB" : Sub,
-    #"MUL" : Mul,
-    #"IDIV" : Idiv,
+    "ADD" : Add,
+    "SUB" : Sub,
+    "MUL" : Mul,
+    "IDIV" : IDiv,
     #"LT" : Lt,
     #"GT" : Gt,
     #"EQ" : Eq,

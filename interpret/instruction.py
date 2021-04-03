@@ -11,10 +11,17 @@ class Instruction:
         self.arguments = []
         for argument in element:
             self.arguments.append(Argument(argument))
+        self.name = type(self).__name__.upper()
 
     def invoke(self):
         """Specific instruction implementation will be invoked here."""
         ...
+
+    def get_var_or_literal_value(self, arg_index:int):
+        value = frames.get_variable(self.name, self.order, self.arguments[arg_index].type, self.arguments[arg_index].value)
+        if value is None:
+            value = self.arguments[arg_index].value
+        return value
 
 
 class Move(Instruction):
@@ -23,10 +30,8 @@ class Move(Instruction):
         super().__init__(element)
 
     def invoke(self):
-        value = frames.get_variable("MOVE", self.order, self.arguments[1].type, self.arguments[1].value)
-        if value is None:
-            value = self.arguments[1].value
-        frames.set_variable("MOVE", self.order, self.arguments[0].type, self.arguments[0].value, value)
+        value = self.get_var_or_literal_value(1)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)
 
 
 class CreateFrame(Instruction):
@@ -40,7 +45,7 @@ class PushFrame(Instruction):
             frames.local_frames.append(frames.temporary_frame)
             frames.temporary_frame = None
         else:
-            stderr.write(f"PUSHFRAME (order: {self.order}): Attempt to access undefined temporary frame.\n")
+            stderr.write(f"{self.name} (order: {self.order}): Attempt to access undefined temporary frame.\n")
             exit(55)
 
 
@@ -49,13 +54,13 @@ class PopFrame(Instruction):
         try:
             frames.temporary_frame = frames.local_frames.pop()
         except IndexError:
-            stderr.write(f"POPFRAME (order: {self.order}): No local frame available.\n")
+            stderr.write(f"{self.name} (order: {self.order}): No local frame available.\n")
             exit(55)
 
 
 class Defvar(Instruction):
     def invoke(self):
-        frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, defined_check=True, value=None)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, defined_check=True, value=None)
 
 
 class Pushs(Instruction):
@@ -67,7 +72,31 @@ class Pushs(Instruction):
 
 class Pops(Instruction):
     def invoke(self):
-        frames.set_variable("POPS", self.order, self.arguments[0].type, self.arguments[0].value, value=Pushs.stack.pop())
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value=Pushs.stack.pop())
+
+
+class Add(Instruction):
+    def invoke(self):
+        result = self.get_var_or_literal_value(1) + self.get_var_or_literal_value(2)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+
+
+class Sub(Instruction):
+    def invoke(self):
+        result = self.get_var_or_literal_value(1) - self.get_var_or_literal_value(2)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+
+
+class Mul(Instruction):
+    def invoke(self):
+        result = self.get_var_or_literal_value(1) * self.get_var_or_literal_value(2)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+
+
+class IDiv(Instruction):
+    def invoke(self):
+        result = self.get_var_or_literal_value(1) // self.get_var_or_literal_value(2)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
 
 
 class Write(Instruction):
@@ -79,7 +108,7 @@ class Write(Instruction):
             print("", end="")
 
         elif self.arguments[0].type == "var":
-            print(frames.get_variable("WRITE", self.order, self.arguments[0].type, self.arguments[0].value), end="")
+            print(frames.get_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value), end="")
             
         else:
             print(self.arguments[0].value, end="")
