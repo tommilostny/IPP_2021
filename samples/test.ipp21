@@ -1,27 +1,30 @@
 .IPPcode21
 
-CREATEFRAME
-DEFVAR TF@a
-MOVE TF@a string@Hello\032World!
-WRITE TF@a
-WRITE string@\010\010
-
-PUSHFRAME
-
+#CREATEFRAME
+#DEFVAR TF@a
+#MOVE TF@a string@Hello\032World!
+#WRITE TF@a
+#WRITE string@\010\010
+#
+#PUSHFRAME
+#
 DEFVAR GF@a
-MOVE GF@a int@42
+#MOVE GF@a int@42
+#
+#WRITE string@Global\032a:\032
+#WRITE GF@a
+#WRITE string@\010
+#
+#WRITE string@Local\032a:\032
+#WRITE LF@a
+#WRITE string@\010
+#
+#POPFRAME
+#WRITE string@PoppedTemp\032a:\032
+#WRITE TF@a
+#WRITE string@\010
 
-WRITE string@Global\032a:\032
+PUSHS string@StackTest
+POPS GF@a
 WRITE GF@a
 WRITE string@\010
-
-WRITE string@Local\032a:\032
-WRITE LF@a
-WRITE string@\010
-
-POPFRAME
-WRITE string@PoppedTemp\032a:\032
-WRITE TF@a
-WRITE string@\010
-
-DEFVAR GF@a

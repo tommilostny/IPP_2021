@@ -58,13 +58,28 @@ class Defvar(Instruction):
         frames.set_variable("DEFVAR", self.order, self.arguments[0].type, self.arguments[0].value, defined_check=True, value=None)
 
 
+class Pushs(Instruction):
+    stack = []
+
+    def invoke(self):
+        self.stack.append(self.arguments[0].value)
+
+
+class Pops(Instruction):
+    def invoke(self):
+        frames.set_variable("POPS", self.order, self.arguments[0].type, self.arguments[0].value, value=Pushs.stack.pop())
+
+
 class Write(Instruction):
     def invoke(self):
         if self.arguments[0].type == "bool":
             print("true" if self.arguments[0].value else "false", end="")
+
         elif self.arguments[0].type == "nil":
             print("", end="")
+
         elif self.arguments[0].type == "var":
             print(frames.get_variable("WRITE", self.order, self.arguments[0].type, self.arguments[0].value), end="")
+            
         else:
             print(self.arguments[0].value, end="")

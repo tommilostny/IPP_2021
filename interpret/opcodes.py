@@ -15,8 +15,8 @@ OPCODES = {
     #"RETURN" : Return,
 
     #Práce s datovým zásobníkem
-    #"PUSHS" : Pushs,
-    #"POPS" : Pops,
+    "PUSHS" : Pushs,
+    "POPS" : Pops,
 
     #Aritmetické, relační, booleovské a konverzní instrukce
     #"ADD" : Add,
