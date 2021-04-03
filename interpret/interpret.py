@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as XmlParser
 from argparse import ArgumentParser
-from sys import stderr
+from sys import stderr, exit
 from typing import List, Union
 
 from instruction import *
@@ -46,8 +46,10 @@ def parse_xml(file_name:str) -> List[Instruction]:
 			try:
 				instructions.append(decode_opcode(instruction))
 			except Exception as e:
-				stderr.write(f"{e}\n")
-				return None
+				opcode = instruction.attrib["opcode"].upper()
+				order = instruction.attrib["order"]
+				stderr.write(f"{opcode}: (order: {order}) {e}\n")
+				exit(53)
 	instructions.sort(key=lambda x: x.order)
 	return instructions
 

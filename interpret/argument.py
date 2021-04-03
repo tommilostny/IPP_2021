@@ -1,9 +1,10 @@
 from xml.etree.ElementTree import Element
 
 class Argument:
-    def __init__(self, element:Element):
-        try:
-            self.type = str(element.attrib["type"])
+    def __init__(self, element:Element, syntax_symbol:str):
+        self.type = str(element.attrib["type"])
+
+        if syntax_symbol == "symb":
 
             if self.type == "int":
                 self.value = int(element.text)
@@ -14,15 +15,26 @@ class Argument:
             elif self.type == "bool":
                 if element.text == "true": self.value = True
                 elif element.text == "false": self.value = False
-                else: raise TypeError()
+                else: raise TypeError(f"{element.text} is not a valid bool")
             
             elif self.type == "nil":
                 self.value = None
 
-            else: self.value = element.text
-                
-        except Exception as e:
-            raise Exception(f"{element.tag}: No attribute {e}, just {element.attrib}.")
+            elif self.type == "var":
+                self.value = element.text
+
+            else: raise SyntaxError(f"{self.type} is not valid {syntax_symbol}")
+        
+        elif syntax_symbol == "var" and self.type == "var":
+            self.value = element.text
+
+        elif syntax_symbol == "label" and self.type == "label":
+            self.value = element.text
+
+        elif syntax_symbol == "type" and self.type == "type":
+            self.value = element.text
+
+        else: raise SyntaxError(f"{self.type} is not valid {syntax_symbol}")
 
 
 def parse_string_arg(string:str) -> str:

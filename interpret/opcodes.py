@@ -2,57 +2,61 @@ from instruction import *
 
 def decode_opcode(instr_element:Element) -> Instruction:
         """Returns instance of an instruction subclass based on opcode."""
-        return OPCODES.get(instr_element.attrib["opcode"], Instruction)(instr_element)
+
+        opcodes_row = OPCODES.get(instr_element.attrib["opcode"], { "class" : Instruction, "syntax" : []})
+
+        #construct Instruction based object
+        return opcodes_row["class"](instr_element, opcodes_row["syntax"])
 
 OPCODES = {
     #Práce s rámci, volání funkcí
-    "MOVE" : Move,
-    "CREATEFRAME" : CreateFrame,
-    "PUSHFRAME" : PushFrame,
-    "POPFRAME" : PopFrame,
-    "DEFVAR" : Defvar,
-    #"CALL" : Call,
-    #"RETURN" : Return,
+    "MOVE"        : { "class" : Move       , "syntax" : ["var", "symb"] },
+    "CREATEFRAME" : { "class" : CreateFrame, "syntax" : [] },
+    "PUSHFRAME"   : { "class" : PushFrame  , "syntax" : [] },
+    "POPFRAME"    : { "class" : PopFrame   , "syntax" : [] },
+    "DEFVAR"      : { "class" : Defvar     , "syntax" : ["var"] },
+    #"CALL"       : { "class" : Call       , "syntax" : ["label"] },
+    #"RETURN"     : { "class" : Return     , "syntax" : [] },
 
     #Práce s datovým zásobníkem
-    "PUSHS" : Pushs,
-    "POPS" : Pops,
+    "PUSHS" : { "class" : Pushs, "syntax" : ["symb"] },
+    "POPS"  : { "class" : Pops , "syntax" : ["var"] },
 
     #Aritmetické, relační, booleovské a konverzní instrukce
-    "ADD" : Add,
-    "SUB" : Sub,
-    "MUL" : Mul,
-    "IDIV" : IDiv,
-    #"LT" : Lt,
-    #"GT" : Gt,
-    #"EQ" : Eq,
-    #"AND" : And,
-    #"OR" : Or,
-    #"NOT" : Not,
-    #"INT2CHAR" : Int2Char,
-    #"STRI2INT" : Stri2Int,
+    "ADD"  : { "class" : Add , "syntax" : ["var", "symb", "symb"] },
+    "SUB"  : { "class" : Sub , "syntax" : ["var", "symb", "symb"] },
+    "MUL"  : { "class" : Mul , "syntax" : ["var", "symb", "symb"] },
+    "IDIV" : { "class" : IDiv, "syntax" : ["var", "symb", "symb"] },
+    #"LT"  : { "class" : Lt  , "syntax" : ["var", "symb", "symb"] },
+    #"GT"  : { "class" : Gt  , "syntax" : ["var", "symb", "symb"] },
+    #"EQ"  : { "class" : Eq  , "syntax" : ["var", "symb", "symb"] },
+    #"AND" : { "class" : And , "syntax" : ["var", "symb", "symb"] },
+    #"OR"  : { "class" : Or  , "syntax" : ["var", "symb", "symb"] },
+    #"NOT" : { "class" : Not , "syntax" : ["var", "symb", "symb"] },
+    #"INT2CHAR" : { "class" : Int2Char , "syntax" : ["var", "symb"] },
+    #"STRI2INT" : { "class" : Stri2Int , "syntax" : ["var", "symb", "symb"] },
 
     #Vstupně-výstupní instrukce
-    #"READ" : Read,
-    "WRITE" : Write,
+    #"READ" : { "class" : Read , "syntax" : ["var", "type"] },
+    "WRITE" : { "class" : Write, "syntax" : ["symb"] },
 
     #Práce s řetězci
-    #"CONCAT" : Concat,
-    #"STRLEN" : Strlen,
-    #"GETCHAR" : Getchar,
-    #"SETCHAR" : Setchar,
+    #"CONCAT"  : { "class" : Concat , "syntax" : ["var", "symb", "symb"] },
+    #"STRLEN"  : { "class" : Strlen , "syntax" : ["var", "symb"] },
+    #"GETCHAR" : { "class" : Getchar, "syntax" : ["var", "symb", "symb"] },
+    #"SETCHAR" : { "class" : Setchar, "syntax" : ["var", "symb", "symb"] },
 
     #Práce s typy
-    #"TYPE" : Type,
+    #"TYPE" : { "class" : Type, "syntax" : ["var", "symb"] },
 
     #Instrukce pro řízení toku programu
-    #"LABEL" : Label,
-    #"JUMP" : Jump,
-    #"JUMPIFEQ" : JumpIfEq,
-    #"JUMPIFNEQ" : JumpIfNeq,
-    #"EXIT" : Exit,
+    #"LABEL"     : { "class" : Label    , "syntax" : ["label"] },
+    #"JUMP"      : { "class" : Jump     , "syntax" : ["label"] },
+    #"JUMPIFEQ"  : { "class" : JumpIfEq , "syntax" : ["label", "symb", "symb"] },
+    #"JUMPIFNEQ" : { "class" : JumpIfNeq, "syntax" : ["label", "symb", "symb"] },
+    #"EXIT"      : { "class" : Exit     , "syntax" : ["symb"] },
 
     #Ladicí instrukce
-    #"DPRINT" : Dprint,
-    #"BREAK" :Break 
+    #"DPRINT" : { "class" : Dprint, "syntax" : ["symb"] },
+    #"BREAK"  : { "class" : Break, "syntax" : [] } 
 }

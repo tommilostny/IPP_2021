@@ -6,12 +6,16 @@ from argument import Argument
 
 
 class Instruction:
-    def __init__(self, element:Element):
+    def __init__(self, element:Element, syntax:list):
         self.order = int(element.attrib["order"])
-        self.arguments = []
-        for argument in element:
-            self.arguments.append(Argument(argument))
         self.name = type(self).__name__.upper()
+        self.arguments = []
+
+        for argument in element:
+            self.arguments.append(Argument(argument, syntax[len(self.arguments)]))
+        if len(self.arguments) != len(syntax):
+            stderr.write(f"{self.name}: (order: {self.order}): Not enought instruction arguments. (syntax: {syntax})\n")
+            exit(53)
 
     def invoke(self):
         """Specific instruction implementation will be invoked here."""
