@@ -2,24 +2,25 @@ from sys import exit, stderr
 
 from instructions.instruction_base import InstructionBase
 
+
 global_frame = {}
 local_frames = []
 temporary_frame = None
 
 
-def set_variable(instr_name:str, instr_order:int, type:str, var:str, value, defined_check:bool=False):
+def set_variable(instr_name:str, instr_order:int, type:str, var:str, value, _define:bool=False):
     global global_frame, local_frames, temporary_frame
     if type == "var":
         frame, _, varname = var.partition("@")
 
-        if frame == "GF" and (not defined_check or varname not in global_frame.keys()):
-            global_frame[varname] = value
+        if frame == "GF" and (not _define or varname not in global_frame.keys()):
+            global_frame[varname] = (value, not _define)
 
-        elif frame == "LF" and len(local_frames) and (not defined_check or varname not in local_frames[-1].keys()):
-            local_frames[-1][varname] = value
+        elif frame == "LF" and len(local_frames) and (not _define or varname not in local_frames[-1].keys()):
+            local_frames[-1][varname] = (value, not _define)
 
-        elif frame == "TF" and temporary_frame is not None and (not defined_check or varname not in temporary_frame.keys()):
-            temporary_frame[varname] = value
+        elif frame == "TF" and temporary_frame is not None and (not _define or varname not in temporary_frame.keys()):
+            temporary_frame[varname] = (value, not _define)
 
         else:
             stderr.write(f"{instr_name}: (order: {instr_order}): Invalid variable \"{var}\"\n")
@@ -35,19 +36,23 @@ def get_variable(instr_name:str, instr_order:int, type:str, var:str):
         frame, _, varname = var.partition("@")
 
         if frame == "GF" and varname in global_frame.keys():
-            value = global_frame[varname]
+            value, initialized = global_frame[varname]
 
         elif frame == "LF" and len(local_frames) and varname in local_frames[-1].keys():
-            value = local_frames[-1][varname]
+            value, initialized = local_frames[-1][varname]
 
         elif frame == "TF" and temporary_frame is not None and varname in temporary_frame.keys():
-            value = temporary_frame[varname]
+            value, initialized = temporary_frame[varname]
 
         else:
             stderr.write(f"{instr_name}: (order: {instr_order}): Invalid variable \"{var}\"\n")
             exit(52)
 
-        return value
+        if initialized:
+            return value
+        else:
+            stderr.write(f"{instr_name}: (order: {instr_order}): Uninitialized variable {varname}.\n")
+            exit(52)
     return None
 
 
@@ -93,4 +98,4 @@ class PopFrame(InstructionBase):
 
 class Defvar(InstructionBase):
     def invoke(self):
-        set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, defined_check=True, value=None)
+        set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, _define=True, value=None)
