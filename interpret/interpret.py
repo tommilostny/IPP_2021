@@ -4,7 +4,7 @@ from sys import exit, stderr
 from typing import List
 
 from instructions.instruction_base import InstructionBase
-from instructions.opcodes_mapper import decode_opcode
+from opcodes_mapper import decode_opcode
 
 
 def parse_arguments():
