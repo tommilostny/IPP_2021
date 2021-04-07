@@ -1,10 +1,10 @@
 import xml.etree.ElementTree as XmlParser
 from argparse import ArgumentParser
-from sys import stderr, exit
-from typing import List, Union
+from sys import exit, stderr
+from typing import List
 
-from instruction import *
-from opcodes import decode_opcode
+from instructions.instruction_base import InstructionBase
+from instructions.opcodes_mapper import decode_opcode
 
 
 def parse_arguments():
@@ -14,14 +14,14 @@ def parse_arguments():
 	return parser.parse_args()
 
 
-def load_xml_from_file(file_name:str) -> Union[Element, None]:
+def load_xml_from_file(file_name:str):
 	try:
 		return XmlParser.parse(file_name).getroot()
 	except XmlParser.ParseError as error:
 		stderr.write(f"{error}\n")
 
 
-def load_xml_from_stdin() -> Union[Element, None]:
+def load_xml_from_stdin():
 	return XmlParser.fromstring(input()) ##TODO: read the whole stdin
 
 
@@ -37,7 +37,7 @@ def check_program_language(program:XmlParser.Element) -> bool:
 	return True
 
 
-def parse_xml(file_name:str) -> List[Instruction]:
+def parse_xml(file_name:str) -> List[InstructionBase]:
 	program = load_xml_from_file(file_name) if file_name is not None else load_xml_from_stdin()
 	instructions = []
 	

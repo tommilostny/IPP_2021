@@ -1,12 +1,21 @@
-from instruction import *
+from xml.etree.ElementTree import Element
 
-def decode_opcode(instr_element:Element) -> Instruction:
-        """Returns instance of an instruction subclass based on opcode."""
+from instructions.instruction_base import InstructionBase
+from instructions.frames import Move, CreateFrame, PushFrame, PopFrame, Defvar
+from instructions.stack import Pops, Pushs
+from instructions.arithmetic import Add, Sub, Mul, IDiv
+from instructions.relational import Lt, Gt, Eq
+from instructions.io import Write
 
-        opcodes_row = OPCODES.get(instr_element.attrib["opcode"], { "class" : Instruction, "syntax" : []})
 
-        #construct Instruction based object
-        return opcodes_row["class"](instr_element, opcodes_row["syntax"])
+def decode_opcode(instr_element:Element) -> InstructionBase:
+    """Returns instance of an instruction subclass based on opcode."""
+
+    opcodes_row = OPCODES.get(instr_element.attrib["opcode"], { "class" : InstructionBase, "syntax" : []})
+
+    #construct Instruction based object
+    return opcodes_row["class"](instr_element, opcodes_row["syntax"])
+
 
 OPCODES = {
     #Práce s rámci, volání funkcí
@@ -27,9 +36,9 @@ OPCODES = {
     "SUB"  : { "class" : Sub , "syntax" : ["var", "symb", "symb"] },
     "MUL"  : { "class" : Mul , "syntax" : ["var", "symb", "symb"] },
     "IDIV" : { "class" : IDiv, "syntax" : ["var", "symb", "symb"] },
-    #"LT"  : { "class" : Lt  , "syntax" : ["var", "symb", "symb"] },
-    #"GT"  : { "class" : Gt  , "syntax" : ["var", "symb", "symb"] },
-    #"EQ"  : { "class" : Eq  , "syntax" : ["var", "symb", "symb"] },
+    "LT"   : { "class" : Lt  , "syntax" : ["var", "symb", "symb"] },
+    "GT"   : { "class" : Gt  , "syntax" : ["var", "symb", "symb"] },
+    "EQ"   : { "class" : Eq  , "syntax" : ["var", "symb", "symb"] },
     #"AND" : { "class" : And , "syntax" : ["var", "symb", "symb"] },
     #"OR"  : { "class" : Or  , "syntax" : ["var", "symb", "symb"] },
     #"NOT" : { "class" : Not , "syntax" : ["var", "symb", "symb"] },
