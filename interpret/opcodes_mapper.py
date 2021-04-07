@@ -5,6 +5,7 @@ from instructions.frames import Move, CreateFrame, PushFrame, PopFrame, Defvar
 from instructions.stack import Pops, Pushs
 from instructions.arithmetic import Add, Sub, Mul, IDiv
 from instructions.relational import Lt, Gt, Eq
+from instructions.boolean import And, Or, Not
 from instructions.io import Write
 
 
@@ -39,9 +40,9 @@ OPCODES = {
     "LT"   : { "class" : Lt  , "syntax" : ["var", "symb", "symb"] },
     "GT"   : { "class" : Gt  , "syntax" : ["var", "symb", "symb"] },
     "EQ"   : { "class" : Eq  , "syntax" : ["var", "symb", "symb"] },
-    #"AND" : { "class" : And , "syntax" : ["var", "symb", "symb"] },
-    #"OR"  : { "class" : Or  , "syntax" : ["var", "symb", "symb"] },
-    #"NOT" : { "class" : Not , "syntax" : ["var", "symb", "symb"] },
+    "AND"  : { "class" : And , "syntax" : ["var", "symb", "symb"] },
+    "OR"   : { "class" : Or  , "syntax" : ["var", "symb", "symb"] },
+    "NOT"  : { "class" : Not , "syntax" : ["var", "symb"] },
     #"INT2CHAR" : { "class" : Int2Char , "syntax" : ["var", "symb"] },
     #"STRI2INT" : { "class" : Stri2Int , "syntax" : ["var", "symb", "symb"] },
 

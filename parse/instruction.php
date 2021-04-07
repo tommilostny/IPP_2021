@@ -63,7 +63,7 @@ class Instruction
 		"EQ" => array( "var", "symb", "symb", "\n" ),
 		"AND" => array( "var", "symb", "symb", "\n" ),
 		"OR" => array( "var", "symb", "symb", "\n" ),
-		"NOT" => array( "var", "symb", "symb", "\n" ),
+		"NOT" => array( "var", "symb", "\n" ),
 		"INT2CHAR" => array( "var", "symb", "\n" ),
 		"STRI2INT" => array( "var", "symb", "symb", "\n" ),
 

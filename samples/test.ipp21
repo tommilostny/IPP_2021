@@ -40,6 +40,6 @@ WRITE TF@result
 WRITE string@\010
 
 DEFVAR TF@ltest
-EQ TF@ltest TF@result int@10
+NOT TF@ltest bool@false
 WRITE TF@ltest
 WRITE string@\010
