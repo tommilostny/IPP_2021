@@ -6,10 +6,10 @@ from instructions.instruction_base import InstructionBase
 
 class _ArithmeticInstructionBase(InstructionBase):
     def invoke(self, operation):
-        try:
-            num1 = int(frames.get_var_or_literal_value(self, 1))
-            num2 = int(frames.get_var_or_literal_value(self, 2))
-        except ValueError:
+        num1 = frames.get_var_or_literal_value(self, 1)
+        num2 = frames.get_var_or_literal_value(self, 2)
+        
+        if type(num1) is not int or type(num2) is not int:
             stderr.write(f"{self.name} (order: {self.order}): Invalid operand type (all must be integers).\n")
             exit(53)
         result = operation(num1, num2)

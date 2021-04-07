@@ -43,3 +43,8 @@ DEFVAR TF@ltest
 NOT TF@ltest bool@false
 WRITE TF@ltest
 WRITE string@\010
+
+MOVE TF@num1 string@ABC
+stri2int TF@result TF@num1 int@2
+WRITE TF@result
+WRITE string@\010

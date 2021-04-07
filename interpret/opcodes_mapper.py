@@ -6,6 +6,7 @@ from instructions.stack import Pops, Pushs
 from instructions.arithmetic import Add, Sub, Mul, IDiv
 from instructions.relational import Lt, Gt, Eq
 from instructions.boolean import And, Or, Not
+from instructions.convertions import Int2Char, Stri2Int
 from instructions.io import Write
 
 
@@ -43,8 +44,8 @@ OPCODES = {
     "AND"  : { "class" : And , "syntax" : ["var", "symb", "symb"] },
     "OR"   : { "class" : Or  , "syntax" : ["var", "symb", "symb"] },
     "NOT"  : { "class" : Not , "syntax" : ["var", "symb"] },
-    #"INT2CHAR" : { "class" : Int2Char , "syntax" : ["var", "symb"] },
-    #"STRI2INT" : { "class" : Stri2Int , "syntax" : ["var", "symb", "symb"] },
+    "INT2CHAR" : { "class" : Int2Char , "syntax" : ["var", "symb"] },
+    "STRI2INT" : { "class" : Stri2Int , "syntax" : ["var", "symb", "symb"] },
 
     #Vstupně-výstupní instrukce
     #"READ" : { "class" : Read , "syntax" : ["var", "type"] },

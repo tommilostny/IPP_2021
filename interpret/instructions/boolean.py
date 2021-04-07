@@ -9,12 +9,11 @@ class _BooleanInstructionBase(InstructionBase):
         value1 = frames.get_var_or_literal_value(self, 1)
         value2 = frames.get_var_or_literal_value(self, 2)
         
-        if type(value1) is bool and type(value2) is bool:
-            result = operation(value1, value2)
-            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
-        else:
+        if type(value1) is not bool or type(value2) is not bool:
             stderr.write(f"{self.name} (order: {self.order}): Invalid types of operands {type(value1).__name__} and {type(value2).__name__}.\n")
             exit(53)
+        result = operation(value1, value2)
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
 
 
 class And(_BooleanInstructionBase):
@@ -31,9 +30,8 @@ class Not(InstructionBase):
     def invoke(self):
         value = frames.get_var_or_literal_value(self, 1)
         
-        if type(value) is bool:
-            result = not value
-            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
-        else:
+        if type(value) is not bool:
             stderr.write(f"{self.name} (order: {self.order}): Invalid type of operand {type(value).__name__}.\n")
             exit(53)
+        result = not value
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
