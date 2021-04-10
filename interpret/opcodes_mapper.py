@@ -8,6 +8,7 @@ from instructions.relational import Lt, Gt, Eq
 from instructions.boolean import And, Or, Not
 from instructions.convertions import Int2Char, Stri2Int
 from instructions.io import Write
+from instructions.string import Concat, Strlen, Getchar, Setchar
 
 
 def decode_opcode(instr_element:Element) -> InstructionBase:
@@ -52,10 +53,10 @@ OPCODES = {
     "WRITE" : { "class" : Write, "syntax" : ["symb"] },
 
     #Práce s řetězci
-    #"CONCAT"  : { "class" : Concat , "syntax" : ["var", "symb", "symb"] },
-    #"STRLEN"  : { "class" : Strlen , "syntax" : ["var", "symb"] },
-    #"GETCHAR" : { "class" : Getchar, "syntax" : ["var", "symb", "symb"] },
-    #"SETCHAR" : { "class" : Setchar, "syntax" : ["var", "symb", "symb"] },
+    "CONCAT"  : { "class" : Concat , "syntax" : ["var", "symb", "symb"] },
+    "STRLEN"  : { "class" : Strlen , "syntax" : ["var", "symb"] },
+    "GETCHAR" : { "class" : Getchar, "syntax" : ["var", "symb", "symb"] },
+    "SETCHAR" : { "class" : Setchar, "syntax" : ["var", "symb", "symb"] },
 
     #Práce s typy
     #"TYPE" : { "class" : Type, "syntax" : ["var", "symb"] },

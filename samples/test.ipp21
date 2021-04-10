@@ -28,23 +28,27 @@ CREATEFRAME
 DEFVAR TF@num1
 DEFVAR TF@num2
 DEFVAR TF@result
-PUSHS int@16
-PUSHS int@7
-POPS TF@num1
-POPS TF@num2
-ADD TF@result TF@num1 TF@num2
-SUB TF@result TF@result int@3
-MUL TF@result TF@result int@5
-IDIV TF@result TF@result int@10
-WRITE TF@result
-WRITE string@\010
+#PUSHS int@16
+#PUSHS int@7
+#POPS TF@num1
+#POPS TF@num2
+#ADD TF@result TF@num1 TF@num2
+#SUB TF@result TF@result int@3
+#MUL TF@result TF@result int@5
+#IDIV TF@result TF@result int@10
+#WRITE TF@result
+#WRITE string@\010
 
-DEFVAR TF@ltest
-NOT TF@ltest bool@false
-WRITE TF@ltest
-WRITE string@\010
+#DEFVAR TF@ltest
+#NOT TF@ltest bool@false
+#WRITE TF@ltest
+#WRITE string@\010
 
 MOVE TF@num1 string@ABC
-stri2int TF@result TF@num1 int@2
+MOVE TF@num2 string@def
+concat TF@result TF@num1 TF@num2
+WRITE TF@result
+WRITE string@\010
+setchar TF@result int@4 string@TUvWxYz
 WRITE TF@result
 WRITE string@\010
