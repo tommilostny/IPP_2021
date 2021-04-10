@@ -10,6 +10,7 @@ from instructions.convertions import Int2Char, Stri2Int
 from instructions.io import Write
 from instructions.string import Concat, Strlen, Getchar, Setchar
 from instructions.type import Type
+from instructions.flow_control import Label, Jump, JumpIfEq, JumpIfNeq, Exit
 
 
 def decode_opcode(instr_element:Element) -> InstructionBase:
@@ -63,11 +64,11 @@ OPCODES = {
     "TYPE" : { "class" : Type, "syntax" : ["var", "symb"] },
 
     #Instrukce pro řízení toku programu
-    #"LABEL"     : { "class" : Label    , "syntax" : ["label"] },
-    #"JUMP"      : { "class" : Jump     , "syntax" : ["label"] },
-    #"JUMPIFEQ"  : { "class" : JumpIfEq , "syntax" : ["label", "symb", "symb"] },
-    #"JUMPIFNEQ" : { "class" : JumpIfNeq, "syntax" : ["label", "symb", "symb"] },
-    #"EXIT"      : { "class" : Exit     , "syntax" : ["symb"] },
+    "LABEL"     : { "class" : Label    , "syntax" : ["label"] },
+    "JUMP"      : { "class" : Jump     , "syntax" : ["label"] },
+    "JUMPIFEQ"  : { "class" : JumpIfEq , "syntax" : ["label", "symb", "symb"] },
+    "JUMPIFNEQ" : { "class" : JumpIfNeq, "syntax" : ["label", "symb", "symb"] },
+    "EXIT"      : { "class" : Exit     , "syntax" : ["symb"] },
 
     #Ladicí instrukce
     #"DPRINT" : { "class" : Dprint, "syntax" : ["symb"] },

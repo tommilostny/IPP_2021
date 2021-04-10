@@ -16,6 +16,6 @@ CONCAT GF@counter GF@counter string@a
 JUMP while
 LABEL end
 
-pushs int@23
-pops GF@counter
-RETURN
+#pushs int@23
+#pops GF@counter
+#RETURN

@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 from sys import exit, stderr
 from typing import List
 
+import instructions.flow_control as flow_control
 from instructions.instruction_base import InstructionBase
 from opcodes_mapper import decode_opcode
 
@@ -37,27 +38,34 @@ def check_program_language(program:XmlParser.Element) -> bool:
 	return True
 
 
-def parse_xml(file_name:str) -> List[InstructionBase]:
+def parse_xml(file_name:str):
 	program = load_xml_from_file(file_name) if file_name is not None else load_xml_from_stdin()
-	instructions = []
 	
 	if program is not None and check_program_language(program):
 		for instruction in program:
 			try:
-				instructions.append(decode_opcode(instruction))
+				flow_control.instructions.append(decode_opcode(instruction))
 			except Exception as e:
 				opcode = instruction.attrib["opcode"].upper()
 				order = instruction.attrib["order"]
 				stderr.write(f"{opcode}: (order: {order}) {e}\n")
 				exit(53)
-	instructions.sort(key=lambda x: x.order)
-	return instructions
+
+	flow_control.instructions.sort(key=lambda x: x.order)
 
 
 if __name__ == "__main__":
 	args = parse_arguments()
-	instructions = parse_xml(args.source)
+	parse_xml(args.source)
 
-	if instructions is not None:
-		for i in instructions:
-			i.invoke()
+	instr_index = 0
+	while instr_index < len(flow_control.instructions):
+
+		#Instrukce skoku vrací int s pozicí cílové instrukce label.
+		#Ostatní instrukce vrací None -> inkrementace pozice následující instrukce.
+		next_instr = flow_control.instructions[instr_index].invoke()
+
+		if next_instr is None:
+			instr_index += 1
+		else:
+			instr_index = next_instr

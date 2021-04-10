@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from xml.etree.ElementTree import Element
 
 from argument import Argument
@@ -15,6 +15,6 @@ class InstructionBase:
         if len(self.arguments) != len(syntax_symbols):
             raise SyntaxError(f"Not enought instruction arguments. (syntax: {syntax_symbols})")
 
-    def invoke(self):
+    def invoke(self) -> Union[None, int]:
         """Specific instruction implementation will be invoked here."""
         ...

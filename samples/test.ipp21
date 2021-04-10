@@ -1,6 +1,6 @@
 .IPPcode21
 
-CREATEFRAME
+#CREATEFRAME
 
 #DEFVAR TF@a
 #MOVE TF@a string@Hello\032World!
@@ -25,9 +25,9 @@ CREATEFRAME
 #WRITE TF@a
 #WRITE string@\010
 
-DEFVAR TF@num1
-DEFVAR TF@num2
-DEFVAR TF@result
+#DEFVAR TF@num1
+#DEFVAR TF@num2
+#DEFVAR TF@result
 #PUSHS int@16
 #PUSHS int@7
 #POPS TF@num1
@@ -44,16 +44,35 @@ DEFVAR TF@result
 #WRITE TF@ltest
 #WRITE string@\010
 
-MOVE TF@num1 string@ABC
-MOVE TF@num2 string@def
-concat TF@result TF@num1 TF@num2
-WRITE TF@result
-WRITE string@\010
-setchar TF@result int@4 string@TUvWxYz
-WRITE TF@result
-WRITE string@\010
+#MOVE TF@num1 string@ABC
+#MOVE TF@num2 string@def
+#concat TF@result TF@num1 TF@num2
+#WRITE TF@result
+#WRITE string@\010
+#setchar TF@result int@4 string@TUvWxYz
+#WRITE TF@result
+#WRITE string@\010
+#
+#DEFVAR TF@typ
+#type TF@typ TF@result
+#WRITE TF@typ
+#WRITE string@\010
 
-DEFVAR TF@typ
-type TF@typ TF@result
-WRITE TF@typ
-WRITE string@\010
+DEFVAR GF@limit
+DEFVAR GF@i
+MOVE GF@limit int@16
+LABEL init_while
+    MOVE GF@i int@-1
+    LABEL while
+        WRITE GF@i
+        JUMPIFEQ end GF@i GF@limit
+        WRITE string@,\032
+        ADD GF@i GF@i int@1
+    JUMP while
+    LABEL end
+    WRITE string@\010
+    iDIV GF@limit GF@limit int@2
+JUMPIFNEQ init_while GF@limit int@0
+
+#EXIT int@0
+#write string@hihi\010
