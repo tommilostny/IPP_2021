@@ -1,46 +1,47 @@
 .IPPcode21
+JUMP main
 
-CREATEFRAME
+#CREATEFRAME
 
-DEFVAR TF@a
-MOVE TF@a string@Hello\032World!
-WRITE TF@a
-WRITE string@\010\010
-
-PUSHFRAME
-
-DEFVAR GF@a
-MOVE GF@a int@42
-
-WRITE string@Global\032a:\032
-WRITE GF@a
-WRITE string@\010
-
-WRITE string@Local\032a:\032
-WRITE LF@a
-WRITE string@\010
-
-#POPFRAME
-#WRITE string@PoppedTemp\032a:\032
+#DEFVAR TF@a
+#MOVE TF@a string@Hello\032World!
 #WRITE TF@a
+#WRITE string@\010\010
+#
+#PUSHFRAME
+#
+#DEFVAR GF@a
+#MOVE GF@a int@42
+#
+#WRITE string@Global\032a:\032
+#WRITE GF@a
 #WRITE string@\010
-
-CREATEFRAME
-DEFVAR TF@num1
-DEFVAR TF@num2
-DEFVAR TF@result
-PUSHS int@16
-PUSHS int@7
-POPS TF@num1
-POPS TF@num2
-ADD TF@result TF@num1 TF@num2
-SUB TF@result TF@result int@3
-MUL TF@result TF@result int@5
-IDIV TF@result TF@result int@10
-WRITE TF@result
-WRITE string@\010
-
-BREAK
+#
+#WRITE string@Local\032a:\032
+#WRITE LF@a
+#WRITE string@\010
+#
+##POPFRAME
+##WRITE string@PoppedTemp\032a:\032
+##WRITE TF@a
+##WRITE string@\010
+#
+#CREATEFRAME
+#DEFVAR TF@num1
+#DEFVAR TF@num2
+#DEFVAR TF@result
+#PUSHS int@16
+#PUSHS int@7
+#POPS TF@num1
+#POPS TF@num2
+#ADD TF@result TF@num1 TF@num2
+#SUB TF@result TF@result int@3
+#MUL TF@result TF@result int@5
+#IDIV TF@result TF@result int@10
+#WRITE TF@result
+#WRITE string@\010
+#
+#BREAK
 
 #DEFVAR TF@ltest
 #NOT TF@ltest bool@false
@@ -61,26 +62,39 @@ BREAK
 #WRITE TF@typ
 #WRITE string@\010
 
-DEFVAR GF@limit
-DEFVAR GF@i
-MOVE GF@limit int@16
-LABEL init_while
-    MOVE GF@i int@-1
-    LABEL while
-        dprint GF@i
-        JUMPIFEQ end GF@i GF@limit
-        dprint string@,\032
-        ADD GF@i GF@i int@1
-    JUMP while
-    LABEL end
-    dprint string@\010
-    iDIV GF@limit GF@limit int@2
-JUMPIFNEQ init_while GF@limit int@0
 
-#EXIT int@0
-#write string@hihi\010
-#PUSHFRAME
-#POPFRAME
-#WRITE LF@a
-BREAK
-#dprint bool@true
+LABEL func1
+    CREATEFRAME
+    PUSHFRAME
+    DEFVAR LF@top
+    DEFVAR LF@counter
+    DEFVAR LF@bottom
+    POPS LF@top
+    POPS LF@bottom
+    LABEL init_while
+        MOVE LF@counter LF@bottom
+        LABEL while
+            dprint LF@counter
+            JUMPIFEQ end LF@counter LF@top
+            dprint string@,\032
+            ADD LF@counter LF@counter int@1
+        JUMP while
+        LABEL end
+        dprint string@\010
+        sub LF@top LF@top int@1
+    JUMPIFNEQ init_while LF@top LF@bottom
+    POPFRAME
+    CREATEFRAME
+RETURN
+
+LABEL main
+    WRITE string@First\032call:\010
+    PUSHS int@100
+    PUSHS int@111
+    CALL func1
+
+    WRITE string@\010Second\032call:\010
+    PUSHS int@2
+    PUSHS int@5
+    CALL func1
+EXIT int@0

@@ -14,9 +14,9 @@ class Pushs(InstructionBase):
 
 class Pops(InstructionBase):
     def invoke(self):
-        if len(stack) > 0:
-            value = stack.pop()
-            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)
-        else:
+        if len(stack) == 0:
             stderr.write(f"{self.name} (order: {self.order}): Stack is empty.\n")
             exit(56)
+
+        value = stack.pop()
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)

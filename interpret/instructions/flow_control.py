@@ -11,6 +11,9 @@ instructions:List[InstructionBase] = []
 #Slovník návěští (jméno -> index v seznamu instrukcí)
 labels:Dict[str, int] = {}
 
+#Čítač instrukcí
+instruction_counter = 0
+
 
 class Label(InstructionBase):
     def __init__(self, element: Element, syntax_symbols: List[str]):
