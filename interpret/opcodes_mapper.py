@@ -9,6 +9,7 @@ from instructions.boolean import And, Or, Not
 from instructions.convertions import Int2Char, Stri2Int
 from instructions.io import Write
 from instructions.string import Concat, Strlen, Getchar, Setchar
+from instructions.type import Type
 
 
 def decode_opcode(instr_element:Element) -> InstructionBase:
@@ -59,7 +60,7 @@ OPCODES = {
     "SETCHAR" : { "class" : Setchar, "syntax" : ["var", "symb", "symb"] },
 
     #Práce s typy
-    #"TYPE" : { "class" : Type, "syntax" : ["var", "symb"] },
+    "TYPE" : { "class" : Type, "syntax" : ["var", "symb"] },
 
     #Instrukce pro řízení toku programu
     #"LABEL"     : { "class" : Label    , "syntax" : ["label"] },
