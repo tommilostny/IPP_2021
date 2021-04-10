@@ -1,16 +1,17 @@
 from xml.etree.ElementTree import Element
 
 from instructions.instruction_base import InstructionBase
-from instructions.frames import Move, CreateFrame, PushFrame, PopFrame, Defvar
-from instructions.stack import Pops, Pushs
-from instructions.arithmetic import Add, Sub, Mul, IDiv
-from instructions.relational import Lt, Gt, Eq
-from instructions.boolean import And, Or, Not
-from instructions.convertions import Int2Char, Stri2Int
-from instructions.io import Write
-from instructions.string import Concat, Strlen, Getchar, Setchar
-from instructions.type import Type
-from instructions.flow_control import Label, Jump, JumpIfEq, JumpIfNeq, Exit
+import instructions.frames       as frames
+import instructions.stack        as stack
+import instructions.arithmetic   as arithmetic
+import instructions.relational   as relational
+import instructions.boolean      as boolean
+import instructions.convertions  as convertions
+import instructions.io           as io
+import instructions.string       as string
+import instructions.type         as type
+import instructions.flow_control as flow_control
+import instructions.debug        as debug
 
 
 def decode_opcode(instr_element:Element) -> InstructionBase:
@@ -24,53 +25,57 @@ def decode_opcode(instr_element:Element) -> InstructionBase:
 
 OPCODES = {
     #Práce s rámci, volání funkcí
-    "MOVE"        : { "class" : Move       , "syntax" : ["var", "symb"] },
-    "CREATEFRAME" : { "class" : CreateFrame, "syntax" : [] },
-    "PUSHFRAME"   : { "class" : PushFrame  , "syntax" : [] },
-    "POPFRAME"    : { "class" : PopFrame   , "syntax" : [] },
-    "DEFVAR"      : { "class" : Defvar     , "syntax" : ["var"] },
-    #"CALL"       : { "class" : Call       , "syntax" : ["label"] },
-    #"RETURN"     : { "class" : Return     , "syntax" : [] },
+    "MOVE"        : { "class" : frames.Move       , "syntax" : ["var", "symb"] },
+    "CREATEFRAME" : { "class" : frames.CreateFrame, "syntax" : [] },
+    "PUSHFRAME"   : { "class" : frames.PushFrame  , "syntax" : [] },
+    "POPFRAME"    : { "class" : frames.PopFrame   , "syntax" : [] },
+    "DEFVAR"      : { "class" : frames.Defvar     , "syntax" : ["var"] },
+
+    #"CALL"       : { "class" : function.Call  , "syntax" : ["label"] },
+    #"RETURN"     : { "class" : function.Return, "syntax" : [] },
 
     #Práce s datovým zásobníkem
-    "PUSHS" : { "class" : Pushs, "syntax" : ["symb"] },
-    "POPS"  : { "class" : Pops , "syntax" : ["var"] },
+    "PUSHS" : { "class" : stack.Pushs, "syntax" : ["symb"] },
+    "POPS"  : { "class" : stack.Pops , "syntax" : ["var"] },
 
     #Aritmetické, relační, booleovské a konverzní instrukce
-    "ADD"  : { "class" : Add , "syntax" : ["var", "symb", "symb"] },
-    "SUB"  : { "class" : Sub , "syntax" : ["var", "symb", "symb"] },
-    "MUL"  : { "class" : Mul , "syntax" : ["var", "symb", "symb"] },
-    "IDIV" : { "class" : IDiv, "syntax" : ["var", "symb", "symb"] },
-    "LT"   : { "class" : Lt  , "syntax" : ["var", "symb", "symb"] },
-    "GT"   : { "class" : Gt  , "syntax" : ["var", "symb", "symb"] },
-    "EQ"   : { "class" : Eq  , "syntax" : ["var", "symb", "symb"] },
-    "AND"  : { "class" : And , "syntax" : ["var", "symb", "symb"] },
-    "OR"   : { "class" : Or  , "syntax" : ["var", "symb", "symb"] },
-    "NOT"  : { "class" : Not , "syntax" : ["var", "symb"] },
-    "INT2CHAR" : { "class" : Int2Char , "syntax" : ["var", "symb"] },
-    "STRI2INT" : { "class" : Stri2Int , "syntax" : ["var", "symb", "symb"] },
+    "ADD"  : { "class" : arithmetic.Add , "syntax" : ["var", "symb", "symb"] },
+    "SUB"  : { "class" : arithmetic.Sub , "syntax" : ["var", "symb", "symb"] },
+    "MUL"  : { "class" : arithmetic.Mul , "syntax" : ["var", "symb", "symb"] },
+    "IDIV" : { "class" : arithmetic.IDiv, "syntax" : ["var", "symb", "symb"] },
+
+    "LT"   : { "class" : relational.Lt, "syntax" : ["var", "symb", "symb"] },
+    "GT"   : { "class" : relational.Gt, "syntax" : ["var", "symb", "symb"] },
+    "EQ"   : { "class" : relational.Eq, "syntax" : ["var", "symb", "symb"] },
+
+    "AND"  : { "class" : boolean.And, "syntax" : ["var", "symb", "symb"] },
+    "OR"   : { "class" : boolean.Or , "syntax" : ["var", "symb", "symb"] },
+    "NOT"  : { "class" : boolean.Not, "syntax" : ["var", "symb"] },
+
+    "INT2CHAR" : { "class" : convertions.Int2Char, "syntax" : ["var", "symb"] },
+    "STRI2INT" : { "class" : convertions.Stri2Int, "syntax" : ["var", "symb", "symb"] },
 
     #Vstupně-výstupní instrukce
-    #"READ" : { "class" : Read , "syntax" : ["var", "type"] },
-    "WRITE" : { "class" : Write, "syntax" : ["symb"] },
+    #"READ" : { "class" : io.Read , "syntax" : ["var", "type"] },
+    "WRITE" : { "class" : io.Write, "syntax" : ["symb"] },
 
     #Práce s řetězci
-    "CONCAT"  : { "class" : Concat , "syntax" : ["var", "symb", "symb"] },
-    "STRLEN"  : { "class" : Strlen , "syntax" : ["var", "symb"] },
-    "GETCHAR" : { "class" : Getchar, "syntax" : ["var", "symb", "symb"] },
-    "SETCHAR" : { "class" : Setchar, "syntax" : ["var", "symb", "symb"] },
+    "CONCAT"  : { "class" : string.Concat , "syntax" : ["var", "symb", "symb"] },
+    "STRLEN"  : { "class" : string.Strlen , "syntax" : ["var", "symb"] },
+    "GETCHAR" : { "class" : string.Getchar, "syntax" : ["var", "symb", "symb"] },
+    "SETCHAR" : { "class" : string.Setchar, "syntax" : ["var", "symb", "symb"] },
 
     #Práce s typy
-    "TYPE" : { "class" : Type, "syntax" : ["var", "symb"] },
+    "TYPE" : { "class" : type.Type, "syntax" : ["var", "symb"] },
 
     #Instrukce pro řízení toku programu
-    "LABEL"     : { "class" : Label    , "syntax" : ["label"] },
-    "JUMP"      : { "class" : Jump     , "syntax" : ["label"] },
-    "JUMPIFEQ"  : { "class" : JumpIfEq , "syntax" : ["label", "symb", "symb"] },
-    "JUMPIFNEQ" : { "class" : JumpIfNeq, "syntax" : ["label", "symb", "symb"] },
-    "EXIT"      : { "class" : Exit     , "syntax" : ["symb"] },
+    "LABEL"     : { "class" : flow_control.Label    , "syntax" : ["label"] },
+    "JUMP"      : { "class" : flow_control.Jump     , "syntax" : ["label"] },
+    "JUMPIFEQ"  : { "class" : flow_control.JumpIfEq , "syntax" : ["label", "symb", "symb"] },
+    "JUMPIFNEQ" : { "class" : flow_control.JumpIfNeq, "syntax" : ["label", "symb", "symb"] },
+    "EXIT"      : { "class" : flow_control.Exit     , "syntax" : ["symb"] },
 
     #Ladicí instrukce
-    #"DPRINT" : { "class" : Dprint, "syntax" : ["symb"] },
-    #"BREAK"  : { "class" : Break, "syntax" : [] } 
+    "DPRINT" : { "class" : debug.Dprint, "syntax" : ["symb"] },
+    "BREAK"  : { "class" : debug.Break, "syntax" : [] } 
 }

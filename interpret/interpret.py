@@ -4,7 +4,7 @@ from sys import exit, stderr
 from typing import List
 
 import instructions.flow_control as flow_control
-from instructions.instruction_base import InstructionBase
+import instructions.debug as debug
 from opcodes_mapper import decode_opcode
 
 
@@ -69,3 +69,6 @@ if __name__ == "__main__":
 			instr_index += 1
 		else:
 			instr_index = next_instr
+
+		debug.instructions_computed += 1
+		debug.last_instruction_index = instr_index - 1
