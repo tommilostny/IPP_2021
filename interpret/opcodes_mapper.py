@@ -59,7 +59,7 @@ OPCODES = {
     "STRI2INT" : { "class" : convertions.Stri2Int, "syntax" : ["var", "symb", "symb"] },
 
     #Vstupně-výstupní instrukce
-    #"READ" : { "class" : io.Read , "syntax" : ["var", "type"] },
+    "READ"  : { "class" : io.Read , "syntax" : ["var", "type"] },
     "WRITE" : { "class" : io.Write, "syntax" : ["symb"] },
 
     #Práce s řetězci

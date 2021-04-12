@@ -4,14 +4,31 @@ from instructions.instruction_base import InstructionBase
 
 class Write(InstructionBase):
     def invoke(self):
-        if self.arguments[0].type == "bool":
-            print("true" if self.arguments[0].value else "false", end="")
+        value = frames.get_var_or_literal_value(self, 0)
 
-        elif self.arguments[0].type == "nil":
-            print("", end="")
-
-        elif self.arguments[0].type == "var":
-            print(frames.get_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value), end="")
-            
+        if type(value) is bool:
+            print(str(value).lower(), end="")
+        elif value is None:
+            print("", end="")     
         else:
-            print(self.arguments[0].value, end="")
+            print(value, end="")
+
+
+class Read(InstructionBase):
+    def invoke(self):
+        input_value = input()
+        required_type = self.arguments[1].value
+
+        try:
+            if required_type == "int":
+                input_value = int(input_value)
+
+            elif required_type == "bool":
+                input_value = input_value.lower() == "true"
+
+            elif required_type != "string":
+                raise ValueError()
+        except:
+            input_value = None
+
+        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, input_value)

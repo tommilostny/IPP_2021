@@ -31,10 +31,10 @@ class Argument:
         elif syntax_symbol == "label" and self.type == "label":
             self.value = element.text
 
-        elif syntax_symbol == "type" and self.type == "type":
+        elif syntax_symbol == "type" and self.type == "type" and element.text in ["int", "string", "bool"]:
             self.value = element.text
 
-        else: raise SyntaxError(f"{self.type} is not valid {syntax_symbol}")
+        else: raise SyntaxError(f"{self.type} {element.text} is not valid {syntax_symbol}")
 
 
 def parse_string_arg(string:str) -> str:
