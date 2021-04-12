@@ -1,5 +1,10 @@
+from sys import stdin
+
 import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
+
+
+input_file = stdin
 
 
 class Write(InstructionBase):
@@ -16,7 +21,7 @@ class Write(InstructionBase):
 
 class Read(InstructionBase):
     def invoke(self):
-        input_value = input()
+        input_value = input_file.readline()
         required_type = self.arguments[1].value
 
         try:

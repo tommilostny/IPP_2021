@@ -88,18 +88,26 @@ LABEL func1
 RETURN
 
 LABEL main
-    #WRITE string@First\032call:\010
-    #PUSHS int@100
-    #PUSHS int@111
-    #CALL func1
-#
-    #WRITE string@\010Second\032call:\010
-    #PUSHS int@2
-    #PUSHS int@5
-    #CALL func1
+    WRITE string@First\032call:\010
+    PUSHS int@100
+    PUSHS int@111
+    CALL func1
+
+    WRITE string@\010Second\032call:\010
+    PUSHS int@2
+    PUSHS int@5
+    CALL func1
+    
     DEFVAR GF@testik
     DEFVAR GF@typ_testiku
     READ GF@testik int
+    TYPE GF@typ_testiku GF@testik
+    WRITE GF@testik
+    WRITE string@,\032
+    WRITE GF@typ_testiku
+    WRITE string@\010
+
+    READ GF@testik bool
     TYPE GF@typ_testiku GF@testik
     WRITE GF@testik
     WRITE string@,\032
