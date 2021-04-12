@@ -9,7 +9,7 @@ stack = []
 
 class Pushs(InstructionBase):
     def invoke(self):
-        stack.append(frames.get_var_or_literal_value(self, 0))
+        stack.append(frames.get(self, 0))
 
 
 class Pops(InstructionBase):
@@ -19,4 +19,4 @@ class Pops(InstructionBase):
             exit(56)
 
         value = stack.pop()
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)
+        frames.set(self, 0, value)

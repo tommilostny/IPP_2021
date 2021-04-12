@@ -4,7 +4,7 @@ from instructions.instruction_base import InstructionBase
 
 class Type(InstructionBase):
     def invoke(self):
-        symbType = type(frames.get_var_or_literal_value(self, 1))
+        symbType = type(frames.get(self, 1))
 
         if symbType is int:
             result = "int"
@@ -15,4 +15,4 @@ class Type(InstructionBase):
         else:
             result = "nil"
 
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+        frames.set(self, 0, result)

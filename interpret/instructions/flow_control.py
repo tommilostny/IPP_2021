@@ -42,8 +42,8 @@ class _ConditionalJumpBase(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): Label {self.arguments[0].value} does not exist.\n")
             exit(52)
 
-        value1 = frames.get_var_or_literal_value(self, 1)
-        value2 = frames.get_var_or_literal_value(self, 2)
+        value1 = frames.get(self, 1)
+        value2 = frames.get(self, 2)
 
         if type(value1) is not type(value2):
             stderr.write(f"{self.name} (order: {self.order}): Cannot compare {type(value1).__name__} and {type(value2).__name__}.\n")
@@ -65,7 +65,7 @@ class JumpIfNeq(_ConditionalJumpBase):
 
 class Exit(InstructionBase):
     def invoke(self):
-        exitcode = frames.get_var_or_literal_value(self, 0)
+        exitcode = frames.get(self, 0)
 
         if type(exitcode) is not int or exitcode < 0 or exitcode > 49:
             stderr.write(f"{self.name} (order: {self.order}): Invalid exit code {exitcode}.\n")

@@ -6,31 +6,31 @@ from instructions.instruction_base import InstructionBase
 
 class Concat(InstructionBase):
     def invoke(self):
-        string1 = frames.get_var_or_literal_value(self, 1)
-        string2 = frames.get_var_or_literal_value(self, 2)
+        string1 = frames.get(self, 1)
+        string2 = frames.get(self, 2)
 
         if type(string1) is not str or type(string2) is not str:
             stderr.write(f"{self.name} (order: {self.order}): Arguments are expected to be string, got {type(string1).__name__, type(string2).__name__}.\n")
             exit(53)
         result = string1 + string2
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+        frames.set(self, 0, result)
 
 
 class Strlen(InstructionBase):
     def invoke(self):
-        string = frames.get_var_or_literal_value(self, 1)
+        string = frames.get(self, 1)
 
         if type(string) is not str:
             stderr.write(f"{self.name} (order: {self.order}): Argument is expected to be string, got {type(string).__name__}.\n")
             exit(53)
         result = len(string)
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+        frames.set(self, 0, result)
 
 
 class Getchar(InstructionBase):
     def invoke(self):
-        string = frames.get_var_or_literal_value(self, 1)
-        index = frames.get_var_or_literal_value(self, 2)
+        string = frames.get(self, 1)
+        index = frames.get(self, 2)
 
         if type(string) is not str:
             stderr.write(f"{self.name} (order: {self.order}): symb1 argument is expected to be string, got {type(string).__name__}.\n")
@@ -40,7 +40,7 @@ class Getchar(InstructionBase):
             exit(53)
         try:
             result = string[index]
-            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+            frames.set(self, 0, result)
 
         except IndexError as e:
             stderr.write(f"{self.name} (order: {self.order}): {e} {string, index}.\n")
@@ -49,9 +49,9 @@ class Getchar(InstructionBase):
 
 class Setchar(InstructionBase):
     def invoke(self):
-        var = frames.get_var_or_literal_value(self, 0)
-        index = frames.get_var_or_literal_value(self, 1)
-        string = frames.get_var_or_literal_value(self, 2)
+        var = frames.get(self, 0)
+        index = frames.get(self, 1)
+        string = frames.get(self, 2)
 
         if type(var) is not str:
             stderr.write(f"{self.name} (order: {self.order}): var argument is expected to be string, got {type(var).__name__}.\n")
@@ -71,4 +71,4 @@ class Setchar(InstructionBase):
             exit(58)
 
         result = f"{var[0:index]}{string[0]}{var[index + 1:]}"
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+        frames.set(self, 0, result)

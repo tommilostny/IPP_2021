@@ -12,7 +12,7 @@ break_instruction_present = False
 
 class Dprint(InstructionBase):
     def invoke(self):
-        stderr.write(str(frames.get_var_or_literal_value(self, 0)))
+        stderr.write(str(frames.get(self, 0)))
 
 
 class Break(InstructionBase):

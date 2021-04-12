@@ -1,39 +1,42 @@
 from sys import exit, stderr
+from typing import Any, Dict, List, Tuple
 
 from instructions.instruction_base import InstructionBase
 
+#Rámec jako slovníková struktura (jméno proměnné -> dvojice (hodnota, inicializováno?))
+global_frame    : Dict[str, Tuple[Any, bool]]       = {}
+local_frames    : List[Dict[str, Tuple[Any, bool]]] = []
+temporary_frame : Dict[str, Tuple[Any, bool]]       = None
 
-global_frame = {}
-local_frames = []
-temporary_frame = None
 
-
-def set_variable(instr_name:str, instr_order:int, type:str, var:str, value, _define:bool=False):
+def set(instr:InstructionBase, arg_index:int, value:Any, _defining:bool=False):
     global global_frame, local_frames, temporary_frame
-    if type == "var":
-        frame, _, varname = var.partition("@")
 
-        if frame == "GF" and (not _define or varname not in global_frame.keys()):
-            global_frame[varname] = (value, not _define)
+    if instr.arguments[arg_index].type == "var":
+        frame, _, varname = instr.arguments[arg_index].value.partition("@")
 
-        elif frame == "LF" and len(local_frames) and (not _define or varname not in local_frames[-1].keys()):
-            local_frames[-1][varname] = (value, not _define)
+        if frame == "GF" and (not _defining or varname not in global_frame.keys()):
+            global_frame[varname] = (value, not _defining)
 
-        elif frame == "TF" and temporary_frame is not None and (not _define or varname not in temporary_frame.keys()):
-            temporary_frame[varname] = (value, not _define)
+        elif frame == "LF" and len(local_frames) and (not _defining or varname not in local_frames[-1].keys()):
+            local_frames[-1][varname] = (value, not _defining)
+
+        elif frame == "TF" and temporary_frame is not None and (not _defining or varname not in temporary_frame.keys()):
+            temporary_frame[varname] = (value, not _defining)
 
         else:
-            stderr.write(f"{instr_name}: (order: {instr_order}): Invalid variable \"{var}\"\n")
-            exit(52)
+            stderr.write(f"{instr.name}: (order: {instr.order}): Invalid variable \"{instr.arguments[arg_index].value}\"\n")
+            exit(54)
     else:
-        stderr.write(f"{instr_name}: (order: {instr_order}): Bad argument type \"{type}\"\n")
+        stderr.write(f"{instr.name}: (order: {instr.order}): Bad argument type \"{type}\"\n")
         exit(52)
+    
 
-
-def get_variable(instr_name:str, instr_order:int, type:str, var:str):
+def get(instr:InstructionBase, arg_index:int):
     global global_frame, local_frames, temporary_frame
-    if type == "var":
-        frame, _, varname = var.partition("@")
+
+    if instr.arguments[arg_index].type == "var":
+        frame, _, varname = instr.arguments[arg_index].value.partition("@")
 
         if frame == "GF" and varname in global_frame.keys():
             value, initialized = global_frame[varname]
@@ -45,28 +48,22 @@ def get_variable(instr_name:str, instr_order:int, type:str, var:str):
             value, initialized = temporary_frame[varname]
 
         else:
-            stderr.write(f"{instr_name}: (order: {instr_order}): Invalid variable \"{var}\"\n")
+            stderr.write(f"{instr.name}: (order: {instr.order}): Invalid variable \"{instr.arguments[arg_index].value}\"\n")
+            exit(54)
+
+        if not initialized:
+            stderr.write(f"{instr.name}: (order: {instr.order}): Uninitialized variable {varname}.\n")
             exit(52)
-
-        if initialized:
-            return value
-        else:
-            stderr.write(f"{instr_name}: (order: {instr_order}): Uninitialized variable {varname}.\n")
-            exit(52)
-    return None
-
-
-def get_var_or_literal_value(instr:InstructionBase, arg_index:int):
-    value = get_variable(instr.name, instr.order, instr.arguments[arg_index].type, instr.arguments[arg_index].value)
-    if value is None and instr.arguments[arg_index].type != "var":
+    else:
         value = instr.arguments[arg_index].value
+
     return value
 
 
 class Move(InstructionBase):
     def invoke(self):
-        value = get_var_or_literal_value(self, 1)
-        set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, value)
+        value = get(self, 1)
+        set(self, 0, value)
 
 
 class CreateFrame(InstructionBase):
@@ -98,4 +95,4 @@ class PopFrame(InstructionBase):
 
 class Defvar(InstructionBase):
     def invoke(self):
-        set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, _define=True, value=None)
+        set(self, 0, _defining=True, value=None)

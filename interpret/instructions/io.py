@@ -9,7 +9,7 @@ input_file = stdin
 
 class Write(InstructionBase):
     def invoke(self):
-        value = frames.get_var_or_literal_value(self, 0)
+        value = frames.get(self, 0)
 
         if type(value) is bool:
             print(str(value).lower(), end="")
@@ -36,4 +36,4 @@ class Read(InstructionBase):
         except:
             input_value = None
 
-        frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, input_value)
+        frames.set(self, 0, input_value)

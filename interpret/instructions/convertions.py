@@ -6,14 +6,14 @@ from instructions.instruction_base import InstructionBase
 
 class Int2Char(InstructionBase):
     def invoke(self):
-        integer = frames.get_var_or_literal_value(self, 1)
+        integer = frames.get(self, 1)
 
         if type(integer) is not int:
             stderr.write(f"{self.name} (order: {self.order}): Argument is expected to be integer, got {type(integer).__name__}.\n")
             exit(53)
         try:
             result = chr(integer)
-            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+            frames.set(self, 0, result)
 
         except ValueError as e:
             stderr.write(f"{self.name} (order: {self.order}): {e} ({integer}).\n")
@@ -22,8 +22,8 @@ class Int2Char(InstructionBase):
 
 class Stri2Int(InstructionBase):
     def invoke(self):
-        string = frames.get_var_or_literal_value(self, 1)
-        index = frames.get_var_or_literal_value(self, 2)
+        string = frames.get(self, 1)
+        index = frames.get(self, 2)
 
         if type(string) is not str:
             stderr.write(f"{self.name} (order: {self.order}): First argument is expected to be string, got {type(string).__name__}.\n")
@@ -33,7 +33,7 @@ class Stri2Int(InstructionBase):
             exit(53)
         try:
             result = ord(string[index])
-            frames.set_variable(self.name, self.order, self.arguments[0].type, self.arguments[0].value, result)
+            frames.set(self, 0, result)
 
         except IndexError as e:
             stderr.write(f"{self.name} (order: {self.order}): {e} {string, index}.\n")
