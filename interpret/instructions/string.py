@@ -12,8 +12,8 @@ class Concat(InstructionBase):
         if type(string1) is not str or type(string2) is not str:
             stderr.write(f"{self.name} (order: {self.order}): Arguments are expected to be string, got {type(string1).__name__, type(string2).__name__}.\n")
             exit(53)
-        result = string1 + string2
-        frames.set(self, 0, result)
+
+        frames.set(self, 0, string1 + string2)
 
 
 class Strlen(InstructionBase):
@@ -23,8 +23,8 @@ class Strlen(InstructionBase):
         if type(string) is not str:
             stderr.write(f"{self.name} (order: {self.order}): Argument is expected to be string, got {type(string).__name__}.\n")
             exit(53)
-        result = len(string)
-        frames.set(self, 0, result)
+
+        frames.set(self, 0, len(string))
 
 
 class Getchar(InstructionBase):
@@ -39,8 +39,7 @@ class Getchar(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): symb2 argument is expected to be integer, got {type(index).__name__}.\n")
             exit(53)
         try:
-            result = string[index]
-            frames.set(self, 0, result)
+            frames.set(self, 0, string[index])
 
         except IndexError as e:
             stderr.write(f"{self.name} (order: {self.order}): {e} {string, index}.\n")
@@ -70,5 +69,4 @@ class Setchar(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): symb2 string is empty {var, index, string}.\n")
             exit(58)
 
-        result = f"{var[0:index]}{string[0]}{var[index + 1:]}"
-        frames.set(self, 0, result)
+        frames.set(self, 0, f"{var[0:index]}{string[0]}{var[index + 1:]}")

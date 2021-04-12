@@ -7,12 +7,12 @@ class Type(InstructionBase):
         symbType = type(frames.get(self, 1))
 
         if symbType is int:
-            result = "int"
+            result_type = "int"
         elif symbType is bool:
-            result = "bool"
+            result_type = "bool"
         elif symbType is str:
-            result = "string"
+            result_type = "string"
         else:
-            result = "nil"
+            result_type = "nil"
 
-        frames.set(self, 0, result)
+        frames.set(self, 0, result_type)

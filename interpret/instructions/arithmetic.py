@@ -7,16 +7,14 @@ from instructions.instruction_base import InstructionBase
 
 class _ArithmeticInstructionBase(InstructionBase):
     def invoke(self, operation:Callable[[int, int], int]):
-
-        num1 = frames.get(self, 1)
-        num2 = frames.get(self, 2)
+        value1 = frames.get(self, 1)
+        value2 = frames.get(self, 2)
         
-        if type(num1) is not int or type(num2) is not int:
-            stderr.write(f"{self.name} (order: {self.order}): Invalid operand type (all must be integers).\n")
+        if type(value1) is not int or type(value2) is not int:
+            stderr.write(f"{self.name} (order: {self.order}): Invalid types of operands {type(value1).__name__} and {type(value2).__name__}.\n")
             exit(53)
 
-        result = operation(num1, num2)
-        frames.set(self, 0, result)
+        frames.set(self, 0, operation(value1, value2))
 
 
 class Add(_ArithmeticInstructionBase):

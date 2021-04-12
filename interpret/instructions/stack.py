@@ -4,19 +4,18 @@ import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
 
 
-stack = []
+data_stack = []
 
 
 class Pushs(InstructionBase):
     def invoke(self):
-        stack.append(frames.get(self, 0))
+        data_stack.append(frames.get(self, 0))
 
 
 class Pops(InstructionBase):
     def invoke(self):
-        if len(stack) == 0:
+        if len(data_stack) == 0:
             stderr.write(f"{self.name} (order: {self.order}): Stack is empty.\n")
             exit(56)
 
-        value = stack.pop()
-        frames.set(self, 0, value)
+        frames.set(self, 0, data_stack.pop())

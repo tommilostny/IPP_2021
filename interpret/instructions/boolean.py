@@ -7,7 +7,6 @@ from instructions.instruction_base import InstructionBase
 
 class _BooleanInstructionBase(InstructionBase):
     def invoke(self, operation:Callable[[bool, bool], bool]):
-
         value1 = frames.get(self, 1)
         value2 = frames.get(self, 2)
         
@@ -15,8 +14,7 @@ class _BooleanInstructionBase(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): Invalid types of operands {type(value1).__name__} and {type(value2).__name__}.\n")
             exit(53)
 
-        result = operation(value1, value2)
-        frames.set(self, 0, result)
+        frames.set(self, 0, operation(value1, value2))
 
 
 class And(_BooleanInstructionBase):
@@ -36,5 +34,5 @@ class Not(InstructionBase):
         if type(value) is not bool:
             stderr.write(f"{self.name} (order: {self.order}): Invalid type of operand {type(value).__name__}.\n")
             exit(53)
-        result = not value
-        frames.set(self, 0, result)
+
+        frames.set(self, 0, not value)

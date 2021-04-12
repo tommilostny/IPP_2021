@@ -1,4 +1,6 @@
 from sys import stderr
+from typing import List
+from xml.etree.ElementTree import Element
 
 import instructions.frames as frames
 import instructions.flow_control as flow_control
@@ -16,11 +18,12 @@ class Dprint(InstructionBase):
 
 
 class Break(InstructionBase):
-    def __init__(self, element, syntax_symbols):
+    def __init__(self, element:Element, syntax_symbols:List[str]):
         global break_instruction_present
         break_instruction_present = True
 
         super().__init__(element, syntax_symbols)
+
 
     def invoke(self):
         stderr.write(f"Stav rámců:\n\tGF:  {frames.global_frame}\n")

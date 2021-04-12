@@ -15,8 +15,7 @@ class _RelationalOperationBase(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): Cannot compare {type(value1).__name__} and {type(value2).__name__}.\n")
             exit(53)
 
-        result = comparison(value1, value2)
-        frames.set(self, 0, result)
+        frames.set(self, 0, comparison(value1, value2))
 
 
 class Lt(_RelationalOperationBase):

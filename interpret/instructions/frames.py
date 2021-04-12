@@ -62,8 +62,7 @@ def get(instr:InstructionBase, arg_index:int):
 
 class Move(InstructionBase):
     def invoke(self):
-        value = get(self, 1)
-        set(self, 0, value)
+        set(self, 0, get(self, 1))
 
 
 class CreateFrame(InstructionBase):

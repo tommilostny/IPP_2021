@@ -12,8 +12,7 @@ class Int2Char(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): Argument is expected to be integer, got {type(integer).__name__}.\n")
             exit(53)
         try:
-            result = chr(integer)
-            frames.set(self, 0, result)
+            frames.set(self, 0, chr(integer))
 
         except ValueError as e:
             stderr.write(f"{self.name} (order: {self.order}): {e} ({integer}).\n")
@@ -32,8 +31,7 @@ class Stri2Int(InstructionBase):
             stderr.write(f"{self.name} (order: {self.order}): Second argument is expected to be integer, got {type(index).__name__}.\n")
             exit(53)
         try:
-            result = ord(string[index])
-            frames.set(self, 0, result)
+            frames.set(self, 0, ord(string[index]))
 
         except IndexError as e:
             stderr.write(f"{self.name} (order: {self.order}): {e} {string, index}.\n")
