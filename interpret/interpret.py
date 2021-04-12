@@ -2,8 +2,8 @@ import xml.etree.ElementTree as XmlParser
 from argparse import ArgumentParser
 from sys import exit, stderr
 
-import instructions.debug as debug
 import instructions.flow_control as flow_control
+from instructions.debug import log_program_progress
 from opcodes_mapper import decode_opcode
 
 
@@ -68,5 +68,4 @@ if __name__ == "__main__":
 		else:
 			flow_control.instruction_counter = next_instr
 
-		debug.instructions_computed += 1
-		debug.last_instruction_index = flow_control.instruction_counter - 1
+		log_program_progress()
