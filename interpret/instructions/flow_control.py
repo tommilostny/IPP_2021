@@ -1,5 +1,5 @@
 from sys import exit, stderr
-from typing import Dict, List
+from typing import Any, Callable, Dict, List
 from xml.etree.ElementTree import Element
 
 import instructions.frames as frames
@@ -16,7 +16,7 @@ instruction_counter = 0
 
 
 class Label(InstructionBase):
-    def __init__(self, element: Element, syntax_symbols: List[str]):
+    def __init__(self, element:Element, syntax_symbols:List[str]):
         super().__init__(element, syntax_symbols)
 
         #Registrace návěští do slovníku
@@ -36,7 +36,8 @@ class Jump(InstructionBase):
 
 
 class _ConditionalJumpBase(InstructionBase):
-    def invoke(self, comparison) -> int:
+    def invoke(self, comparison:Callable[[Any, Any], bool]) -> int:
+
         if self.arguments[0].value not in labels.keys():
             stderr.write(f"{self.name} (order: {self.order}): Label {self.arguments[0].value} does not exist.\n")
             exit(52)
