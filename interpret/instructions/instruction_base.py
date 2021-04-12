@@ -6,7 +6,14 @@ from argument import Argument
 
 class InstructionBase:
     def __init__(self, element:Element, syntax_symbols:List[str]):
-        self.order = int(element.attrib["order"])
+        error = SyntaxError(f"Bad instruction element {element} {element.attrib} (syntax: {syntax_symbols})")
+        
+        try: self.order = int(element.attrib["order"])
+        except: raise error
+
+        if element.tag != "instruction" or len(element.attrib.keys()) != 2 or self.order < 1:
+            raise error
+
         self.name = type(self).__name__.upper()
 
         self.arguments:List[Argument] = []
@@ -14,10 +21,9 @@ class InstructionBase:
         for argument in element:
             self.arguments.append(Argument(argument, syntax_symbols[len(self.arguments)]))
 
-        if len(self.arguments) != len(syntax_symbols):
-            raise SyntaxError(f"Not enought instruction arguments. (syntax: {syntax_symbols})")
-
 
     def invoke(self) -> Union[None, int]:
         """Specific instruction implementation will be invoked here."""
         ...
+
+#TODO: opcodes se neopakují (unique)

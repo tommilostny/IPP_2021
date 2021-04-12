@@ -25,10 +25,9 @@ def load_xml_tree(file_name:str):
 
 def check_program_language(program:ETree.Element) -> bool:
 	if program is not None:
-		expected_tag = "program"
-		expected_attrib = {"language": "IPPcode21"}
-		if program.tag != expected_tag:
-			stderr.write(f"Bad tag: \"{program.tag}\"\nExpected \"{expected_tag}\".\n")
+		expected_attrib = {"language": "IPPcode21"} #TODO: other interpret only args
+		if program.tag != "program":
+			stderr.write(f"Bad tag: \"{program.tag}\"\nExpected \"program\".\n")
 			return False
 		elif program.attrib != expected_attrib:
 			stderr.write(f"Bad program tag attribute(s): {program.attrib}\nExpected {expected_attrib}.\n")
@@ -38,20 +37,19 @@ def check_program_language(program:ETree.Element) -> bool:
 
 
 def parse_xml(file_name:str):
-	program = load_xml_tree(file_name) if file_name is not None else load_xml_tree(stdin)
+	program = load_xml_tree(file_name) if file_name is not None else load_xml_tree(stdin) #Načtení XML stromu ze souboru/stdin
 	
-	if check_program_language(program):
-		for instruction in program:
+	if check_program_language(program): #Hlavní tag <program /> je validní
+		for instruction in program:     #Načtení a dekódování všech instrukcí na třídy
 			try:
 				flow_control.instructions.append(decode_opcode(instruction))
 			except Exception as e:
-				opcode = instruction.attrib["opcode"].upper()
-				order = instruction.attrib["order"]
-				stderr.write(f"{opcode}: (order: {order}) {e}.\n")
+				stderr.write(f"{e}.\n")
 				exit(53)
 	else: exit(32)
 
-	flow_control.instructions.sort(key=lambda x: x.order)
+	flow_control.instructions.sort(key=lambda x: x.order) #Seřazení instrukcí podle pořadí (můžou být spřeházené)
+	flow_control.register_all_labels()                    #Registrace všech návěští v seznamu instrukcí
 
 
 if __name__ == "__main__":
@@ -62,7 +60,7 @@ if __name__ == "__main__":
 		stderr.write("To display help run the program with --help.\n")
 		exit(10)
 	
-	if args.input is not None:
+	if args.input is not None: #Zadán argument --input (otevření vstupního souboru pro čtení místo stdin)
 		try:
 			io.input_file = open(args.input, "r")
 		except FileNotFoundError as e:
@@ -71,7 +69,7 @@ if __name__ == "__main__":
 
 	parse_xml(args.source)
 
-	while flow_control.instruction_counter < len(flow_control.instructions):
+	while flow_control.instruction_counter < len(flow_control.instructions): #Hlavní smyčka programu
 
 		#Instrukce skoku vrací int s pozicí cílové instrukce label.
 		#Ostatní instrukce vrací None -> inkrementace pozice následující instrukce.
@@ -82,7 +80,7 @@ if __name__ == "__main__":
 		else:
 			flow_control.instruction_counter = next_instr
 
-		log_program_progress()
+		log_program_progress() #logování ladících informací pro instrukci BREAK
 
 	if args.input is not None:
 		io.input_file.close()

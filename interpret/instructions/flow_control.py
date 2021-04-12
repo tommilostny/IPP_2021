@@ -15,16 +15,21 @@ labels:Dict[str, int] = {}
 instruction_counter = 0
 
 
-class Label(InstructionBase):
-    def __init__(self, element:Element, syntax_symbols:List[str]):
-        super().__init__(element, syntax_symbols)
+def register_all_labels():
+    for index, instruction in enumerate(instructions):
+	    if type(instruction) is Label:
+		    instruction.register(index + 1)
 
+
+class Label(InstructionBase):
+    def register(self, index:int):
         #Registrace návěští do slovníku
         if self.arguments[0].value not in labels.keys():
-            labels[self.arguments[0].value] = len(instructions)
+            labels[self.arguments[0].value] = index
         else:
             stderr.write(f"{self.name} (order: {self.order}): Label {self.arguments[0].value} already exists.\n")
             exit(52)
+
 
 class Jump(InstructionBase):
     def invoke(self) -> int:
