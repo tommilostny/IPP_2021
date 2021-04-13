@@ -4,7 +4,7 @@ Jméno a příjmení: Tomáš Milostný
 Login: xmilos02
 
 ---
-## [interpret.py](interpret/interpret.py)
+## [interpret.py](interpret.py)
 Hlavní program interpret XML reprezentace jazyka IPPcode21.
 
 Zpracovává následující parametry příkazové řádky knihovnou **argparse**:
@@ -26,7 +26,7 @@ Jestliže je zadán alespoň jeden z parametrů ``--source`` nebo ``--input``
 5. Následuje smyčka vykonávání programu, kde jsou postupně ze seznamu instrukcí spouštěny jednotlivé instrukce voláním metody **``invoke``**.
 
 ### Instrukce
-Jádrem zpracování instrukcí je bázová třída **``InstructionBase``** ze souboru [instruction_base.py](interpret/instructions/instruction_base.py),
+Jádrem zpracování instrukcí je bázová třída **``InstructionBase``** ze souboru [instruction_base.py](instructions/instruction_base.py),
 která definuje konstruktor a metodu **``invoke``** společné pro všechny implementace instrukcí.
 
 Parametry konstruktoru instrukce jsou element programu a sezname syntaktických symbolů
@@ -38,23 +38,23 @@ Konstruktoru argumentu je krom elementu předán také syntaktický symbol na po
 
 Konkrétní třídy jsou dále v adresáři **instructions** implementovány v samostatných modulech dle kategorie a způsobu použití instrukce:
 
-* [arithmetic.py](interpret/instructions/arithmetic.py)
+* [arithmetic.py](instructions/arithmetic.py)
     - Aritmetické instrukce **ADD**, **SUB**, **MUL**, **IDIV**.
     - Obsahuje také aritmetickou bázovou třídu, kterou tyto instrukce implementují
         (mají společnou sémantiku s rozdílem provedené operace).
     - Zděděné třídy volají společnou metodu **``invoke``**, které předají parametr operace jako lambda výraz.
-* [boolean.py](interpret/instructions/boolean.py)
+* [boolean.py](instructions/boolean.py)
     - Booleovské instrukce **AND**, **OR**, **NOT**.
     - Podobně jako modul aritmetických instrukcí obsahuje bázovou třídu pro booleovské operace.
         Není využita instrukcí ``Not``, protože zpracovává pouze dva argumenty.
-* [convertions.py](interpret/instructions/convertions.py)
+* [convertions.py](instructions/convertions.py)
     - Konverzní instrukce **INT2CHAR**, **STRI2INT**.
-* [debug.py](interpret/instructions/debug.py)
+* [debug.py](instructions/debug.py)
     - Ladící instrukce **DPRINT**, **BREAK**.
     - Modul obsahuje také proměnné, které jsou použity pro sledování běhu programu.
         Počítá provedené instrukce a udržuje si pozici v seznamu instrukcí.
         Program je těmito proměnnými sledován, jen když je nastaven příznak v konstruktoru instrukce ``Break``.
-* [flow_control.py](interpret/instructions/flow_control.py)
+* [flow_control.py](instructions/flow_control.py)
     - Instrukce řízení toku programu **LABEL**, **JUMP**, **JUMPIFEQ**, **JUMPIFNEQ**, **EXIT**.
     - Obsahuje seznam instrukcí (rovněž používán v interpretu pro navigaci v programu),
         slovník návěští (klíčem je jméno návěští, ukazuje na index v seznamu instrukcí)
@@ -65,45 +65,45 @@ Konkrétní třídy jsou dále v adresáři **instructions** implementovány v s
     - Metoda **``invoke``** instrukcí skoku, narozdíl od ostatních instrukcí bez návratové hodnotu, vrací hodnotu typu ``int`` jako novou pozici programového čítače, specifikovanou v argumentu návěští.
     Tato hodnota je pak přijata v hlavní smyčce programu interpretu.
     - Instrukce podmíněných skoků mají rovněž společnou bázovou třídu (opět mají stejnou sémantiku pouze s rozdílem typu porovnání).
-* [frames.py](interpret/instructions/frames.py)
+* [frames.py](instructions/frames.py)
     - Instrukce pracující s datovými rámci **MOVE**, **CREATEFRAME**, **PUSHFRAME**, **POPFRAME**, **DEFVAR**.
     - Obsahuje slovníky ``global_frame``, ``temporary_frame`` a seznam slovníků ``local_frames`` a funkce **``get``**, **``set``**, které s rámci pracují a jsou využívány i ostatními moduly pro jednodušší práci s proměnnými
     (hlídají stav inicializace, přístup k validnímu rámci, označenému ve jménu proměnné).
     - Funkce ``get`` rovněž umožňuje vrátit hodnotu literálu, pokud typ argumentu není *var*.
     - Funkce ``set`` je rovněž instrukcí ``Defvar`` použita k definici proměnné, jinak je povolen přístup pouze k již inicializovaným proměnným.
-* [function.py](interpret/instructions/function.py)
+* [function.py](instructions/function.py)
     - Instrukce volání funckí **CALL**, **RETURN**.
     - Obsahuje zásovník volání, do kterého instrukce ``Call`` ukládá inkrementovaný aktuální stav programového čítače (návratovou adresu).
     - ``Return`` opět nastaví programový čítač na hodnotu z vrcholu zásobníku volání
     - Je využito mechanismu návratu hodnoty typu ``int`` podobně jako skokové instrukce.
-* [io.py](interpret/instructions/io.py)
+* [io.py](instructions/io.py)
     - Vstup/výstupní instrukce **WRITE**, **READ**.
     - Obsahuje vstupní soubor interpretu, který může být ze standardního vstupu přepsán na soubor parametrem příkazové řádky *``--input``*.
-* [relational.py](interpret/instructions/relational.py)
+* [relational.py](instructions/relational.py)
     - Relační porovnávací instrukce **LT**, **GT**, **EQ**.
     - Podobně jako modul booleovských instrukcí obsahuje bázovou třídu pro relační porovnávání.
-* [stack.py](interpret/instructions/stack.py)
+* [stack.py](instructions/stack.py)
     - Zásobníkové instrukce **PUSHS**, **POPS**.
     - Obsahuje datový zásobník.
-* [string.py](interpret/instructions/string.py)
+* [string.py](instructions/string.py)
     - Instrukce pracující s řetětězci **CONCAT**, **STRLEN**, **GETCHAR**, **SETCHAR**.
-* [type.py](interpret/instructions/type.py)
+* [type.py](instructions/type.py)
     - Instrukce pro zjištění typu proměnné nebo literálu **TYPE**.
 
-### [argument.py](interpret/argument.py)
+### [argument.py](argument.py)
 Obsahuje třídu **``Argument``** reprezentující argument instrukce programu.
 
 Konstruktor této třídy kontroluje validitu elementu ``<arg(číslo)>``, atributu *type*
 a dle čísla argumentu také zda se jedná o validní typ na základě syntaktického symbolu.
 
-### [opcodes_mapper.py](interpret/opcodes_mapper.py)
+### [opcodes_mapper.py](opcodes_mapper.py)
 Účelem tohoto modulu je mapování řetězce operačního kódu na objekt instrukce implementující **``InstructionBase``**.
 
 Obsahuje slovník **``OPCDODES``**, jehož klíčem je uppercase operační kód ukazující na slovníkovou strukturu s klíči:
 - *class* - typ třídy z instrukčních modulů.
 - *syntax* - syntaktické symboly (var, symb, label, type), určují typy a počet argumentů, které daná instrukce podporuje.
 
-### [error.py](interpret/error.py)
+### [error.py](error.py)
 Modul obsahující funkce pro výpis chyby a ukončení programu s příslušným chybovým kódem.
 Pokud je vstupní soubor nastaven parametrem ``--input``, je tento soubor uzavřen.
 
@@ -111,4 +111,4 @@ Funkce ``exit_instruction_error`` je specializovaná na výpis chyb při vykoná
 a chybový výstup je obohacen o informace o dané instrukci.
 
 ---
-## [test.php](test/test.php)
+## [test.php](test.php)
