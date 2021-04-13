@@ -1,6 +1,5 @@
 from sys import exit, stderr
 from typing import Any, Callable, Dict, List
-from xml.etree.ElementTree import Element
 
 import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
