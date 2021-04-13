@@ -1,5 +1,6 @@
-from sys import exit, stderr
 from typing import Any, Dict, List, Tuple
+
+from error import exit_instruction_error
 
 from instructions.instruction_base import InstructionBase
 
@@ -25,11 +26,9 @@ def set(instr:InstructionBase, arg_index:int, value:Any, _defining:bool=False):
             temporary_frame[varname] = (value, not _defining)
 
         else:
-            stderr.write(f"{instr.name}: (order: {instr.order}): Invalid variable \"{instr.arguments[arg_index].value}\"\n")
-            exit(54)
+            exit_instruction_error(instr, 54, f"Invalid variable \"{instr.arguments[arg_index].value}\"")
     else:
-        stderr.write(f"{instr.name}: (order: {instr.order}): Bad argument type \"{type}\"\n")
-        exit(52)
+        exit_instruction_error(instr, 52, f"Bad argument type \"{instr.arguments[arg_index].type}\"")
     
 
 def get(instr:InstructionBase, arg_index:int):
@@ -48,12 +47,10 @@ def get(instr:InstructionBase, arg_index:int):
             value, initialized = temporary_frame[varname]
 
         else:
-            stderr.write(f"{instr.name}: (order: {instr.order}): Invalid variable \"{instr.arguments[arg_index].value}\"\n")
-            exit(54)
+            exit_instruction_error(instr, 54, f"Invalid variable \"{instr.arguments[arg_index].value}\"")
 
         if not initialized:
-            stderr.write(f"{instr.name}: (order: {instr.order}): Uninitialized variable {varname}.\n")
-            exit(52)
+            exit_instruction_error(instr, 52, f"Uninitialized variable {varname}")
     else:
         value = instr.arguments[arg_index].value
 
@@ -78,8 +75,7 @@ class PushFrame(InstructionBase):
             local_frames.append(temporary_frame)
             temporary_frame = None
         else:
-            stderr.write(f"{self.name} (order: {self.order}): Attempt to access undefined temporary frame.\n")
-            exit(55)
+            exit_instruction_error(self, 55, "Attempted to access undefined temporary frame")
 
 
 class PopFrame(InstructionBase):
@@ -88,8 +84,7 @@ class PopFrame(InstructionBase):
         try:
             temporary_frame = local_frames.pop()
         except IndexError:
-            stderr.write(f"{self.name} (order: {self.order}): No local frame available.\n")
-            exit(55)
+            exit_instruction_error(self, 55, "No local frame available")
 
 
 class Defvar(InstructionBase):

@@ -1,4 +1,4 @@
-from sys import exit, stderr
+from error import exit_instruction_error
 
 import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
@@ -15,7 +15,6 @@ class Pushs(InstructionBase):
 class Pops(InstructionBase):
     def invoke(self):
         if len(data_stack) == 0:
-            stderr.write(f"{self.name} (order: {self.order}): Stack is empty.\n")
-            exit(56)
+            exit_instruction_error(self, 56, "Stack is empty")
 
         frames.set(self, 0, data_stack.pop())

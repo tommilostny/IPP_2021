@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ETree
 from argparse import ArgumentParser
-from sys import exit, stderr, stdin
+from sys import stdin
 
 import instructions.flow_control as flow_control
 import instructions.io as io
+from error import exit_error
 from instructions.debug import log_program_progress
 from opcodes_mapper import decode_opcode
 
@@ -19,14 +20,12 @@ def load_xml_tree(file_name:str):
 	try:
 		return ETree.parse(file_name).getroot()
 	except ETree.ParseError as error:
-		stderr.write(f"XML parser error: {error}\n")
-		exit(31)
+		exit_error(f"XML parser error: {error}", 31)
 
 
 def check_program_element(program:ETree.Element):
 	if program.tag != "program":
-		stderr.write(f"Bad tag: \"{program.tag}\"\nExpected \"program\".\n")
-		exit(32)
+		exit_error(f"Bad tag: \"{program.tag}\"\nExpected \"program\"", 32)
 	
 	correct_attribs = False
 	for count, att in enumerate(program.attrib.keys()):
@@ -38,8 +37,7 @@ def check_program_element(program:ETree.Element):
 			break
 	
 	if not correct_attribs or count < 0 or count > 2:
-		stderr.write(f"Bad program tag {program}: {program.attrib}\n")
-		exit(32)
+		exit_error(f"Bad program tag {program}: {program.attrib}", 32)
 
 
 def parse_xml(file_name:str):
@@ -51,8 +49,7 @@ def parse_xml(file_name:str):
 		try:
 			flow_control.instructions.append(decode_opcode(instruction))
 		except Exception as e:
-			stderr.write(f"{e}.\n")
-			exit(53)
+			exit_error(str(e), 53)
 
 	flow_control.instructions.sort(key=lambda x: x.order) #Seřazení instrukcí podle pořadí (můžou být spřeházené)
 	flow_control.register_all_labels()                    #Registrace všech návěští v seznamu instrukcí
@@ -62,16 +59,13 @@ if __name__ == "__main__":
 	args = parse_arguments()
 
 	if args.source is None and args.input is None:
-		stderr.write("Either --source or --input parameter needs to be specified.\n")
-		stderr.write("To display help run the program with --help.\n")
-		exit(10)
-	
+		exit_error(exitcode=10, message="Either --source or --input parameter needs to be specified.\nTo display help run the program with --help")
+
 	if args.input is not None: #Zadán argument --input (otevření vstupního souboru pro čtení místo stdin)
 		try:
 			io.input_file = open(args.input, "r")
 		except FileNotFoundError as e:
-			stderr.write(f"{e}\n")
-			exit(11)
+			exit_error(str(e), 11)
 
 	parse_xml(args.source)
 

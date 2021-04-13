@@ -1,5 +1,6 @@
-from sys import exit, stderr
 from typing import Callable
+
+from error import exit_instruction_error
 
 import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
@@ -11,8 +12,7 @@ class _BooleanInstructionBase(InstructionBase):
         value2 = frames.get(self, 2)
         
         if type(value1) is not bool or type(value2) is not bool:
-            stderr.write(f"{self.name} (order: {self.order}): Invalid types of operands {type(value1).__name__} and {type(value2).__name__}.\n")
-            exit(53)
+            exit_instruction_error(self, 53, f"Invalid types of operands {type(value1).__name__} and {type(value2).__name__}")
 
         frames.set(self, 0, operation(value1, value2))
 
@@ -32,7 +32,6 @@ class Not(InstructionBase):
         value = frames.get(self, 1)
         
         if type(value) is not bool:
-            stderr.write(f"{self.name} (order: {self.order}): Invalid type of operand {type(value).__name__}.\n")
-            exit(53)
+            exit_instruction_error(self, 53, f"Invalid type of operand {type(value).__name__}")
 
         frames.set(self, 0, not value)

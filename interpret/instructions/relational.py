@@ -1,5 +1,6 @@
-from sys import exit, stderr
 from typing import Any, Callable
+
+from error import exit_instruction_error
 
 import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
@@ -12,8 +13,7 @@ class _RelationalComparisonBase(InstructionBase):
         value2 = frames.get(self, 2)
         
         if type(value1) is not type(value2) or value1 is None or value2 is None:
-            stderr.write(f"{self.name} (order: {self.order}): Cannot compare {type(value1).__name__} and {type(value2).__name__}.\n")
-            exit(53)
+            exit_instruction_error(self, 53, f"Cannot compare {type(value1).__name__} and {type(value2).__name__}")
 
         frames.set(self, 0, comparison(value1, value2))
 
