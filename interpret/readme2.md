@@ -85,6 +85,8 @@ Konkrétní třídy jsou dále v adresáři **instructions** implementovány v s
 * [stack.py](interpret/instructions/stack.py)
     - Zásobníkové instrukce **PUSHS**, **POPS**.
     - Obsahuje datový zásobník.
+* [string.py](interpret/instructions/string.py)
+    - Instrukce pracující s řetětězci **CONCAT**, **STRLEN**, **GETCHAR**, **SETCHAR**.
 * [type.py](interpret/instructions/type.py)
     - Instrukce pro zjištění typu proměnné nebo literálu **TYPE**.
 
@@ -102,6 +104,11 @@ Obsahuje slovník **``OPCDODES``**, jehož klíčem je uppercase operační kód
 - *syntax* - syntaktické symboly (var, symb, label, type), určují typy a počet argumentů, které daná instrukce podporuje.
 
 ### [error.py](interpret/error.py)
+Modul obsahující funkce pro výpis chyby a ukončení programu s příslušným chybovým kódem.
+Pokud je vstupní soubor nastaven parametrem ``--input``, je tento soubor uzavřen.
+
+Funkce ``exit_instruction_error`` je specializovaná na výpis chyb při vykonávání instrukcí
+a chybový výstup je obohacen o informace o dané instrukci.
 
 ---
 ## [test.php](test/test.php)
