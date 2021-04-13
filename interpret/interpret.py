@@ -23,30 +23,36 @@ def load_xml_tree(file_name:str):
 		exit(31)
 
 
-def check_program_language(program:ETree.Element) -> bool:
-	if program is not None:
-		expected_attrib = {"language": "IPPcode21"} #TODO: other interpret only args
-		if program.tag != "program":
-			stderr.write(f"Bad tag: \"{program.tag}\"\nExpected \"program\".\n")
-			return False
-		elif program.attrib != expected_attrib:
-			stderr.write(f"Bad program tag attribute(s): {program.attrib}\nExpected {expected_attrib}.\n")
-			return False
-		return True
-	return False
+def check_program_element(program:ETree.Element):
+	if program.tag != "program":
+		stderr.write(f"Bad tag: \"{program.tag}\"\nExpected \"program\".\n")
+		exit(32)
+	
+	correct_attribs = False
+	for count, att in enumerate(program.attrib.keys()):
+		if att == "language" and program.attrib[att] == "IPPcode21":
+			correct_attribs = True
+
+		elif att not in [ "name", "description" ]:
+			correct_attribs = False
+			break
+	
+	if not correct_attribs or count < 0 or count > 2:
+		stderr.write(f"Bad program tag {program}: {program.attrib}\n")
+		exit(32)
 
 
 def parse_xml(file_name:str):
 	program = load_xml_tree(file_name) if file_name is not None else load_xml_tree(stdin) #Načtení XML stromu ze souboru/stdin
 	
-	if check_program_language(program): #Hlavní tag <program /> je validní
-		for instruction in program:     #Načtení a dekódování všech instrukcí na třídy
-			try:
-				flow_control.instructions.append(decode_opcode(instruction))
-			except Exception as e:
-				stderr.write(f"{e}.\n")
-				exit(53)
-	else: exit(32)
+	check_program_element(program) #Hlavní tag <program /> je validní?
+
+	for instruction in program: #Načtení a dekódování všech instrukcí na třídy
+		try:
+			flow_control.instructions.append(decode_opcode(instruction))
+		except Exception as e:
+			stderr.write(f"{e}.\n")
+			exit(53)
 
 	flow_control.instructions.sort(key=lambda x: x.order) #Seřazení instrukcí podle pořadí (můžou být spřeházené)
 	flow_control.register_all_labels()                    #Registrace všech návěští v seznamu instrukcí
