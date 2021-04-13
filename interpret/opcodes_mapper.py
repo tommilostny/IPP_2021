@@ -16,13 +16,11 @@ import instructions.debug        as debug
 
 
 def decode_opcode(instr_element:Element) -> InstructionBase:
-    """Returns instance of an instruction subclass based on opcode."""
     try:
         opcodes_row = OPCODES[str(instr_element.attrib["opcode"]).upper()]
     except KeyError:
         raise SyntaxError(f"Bad instruction element: {instr_element} {instr_element.attrib}")
 
-    #construct Instruction based object
     return opcodes_row["class"](instr_element, opcodes_row["syntax"])
 
 
