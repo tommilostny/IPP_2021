@@ -5,7 +5,7 @@ import instructions.frames as frames
 from instructions.instruction_base import InstructionBase
 
 
-class _RelationalOperationBase(InstructionBase):
+class _RelationalComparisonBase(InstructionBase):
     def invoke(self, comparison:Callable[[Any, Any], bool]):
 
         value1 = frames.get(self, 1)
@@ -18,16 +18,16 @@ class _RelationalOperationBase(InstructionBase):
         frames.set(self, 0, comparison(value1, value2))
 
 
-class Lt(_RelationalOperationBase):
+class Lt(_RelationalComparisonBase):
     def invoke(self):
         super().invoke(lambda x1, x2: x1 < x2)
 
 
-class Gt(_RelationalOperationBase):
+class Gt(_RelationalComparisonBase):
     def invoke(self):
         super().invoke(lambda x1, x2: x1 > x2)
 
 
-class Eq(_RelationalOperationBase):
+class Eq(_RelationalComparisonBase):
     def invoke(self):
         super().invoke(lambda x1, x2: x1 == x2)
