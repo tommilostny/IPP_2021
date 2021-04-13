@@ -9,7 +9,7 @@ class Argument:
         except:
             raise SyntaxError(f"Bad argument: missing type attribute: {element} {element.attrib}")
 
-        error_flag = len(element.attrib.keys()) > 1 or not re.compile("^arg\d$").match(element.tag)
+        error_flag = len(element.attrib.keys()) > 1 or not re.compile(r"^arg\d$").match(element.tag)
         if not error_flag:
             self.order = int(element.tag[3]) - 1
             error_flag = self.order < 0 or self.order >= len(syntax_symbols)

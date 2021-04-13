@@ -95,7 +95,11 @@ Konstruktor této třídy kontroluje validitu elementu ``<arg(číslo)>``, atrib
 a dle čísla argumentu také zda se jedná o validní typ na základě syntaktického symbolu.
 
 ### [opcodes_mapper.py](interpret/opcodes_mapper.py)
+Účelem tohoto modulu je mapování řetězce operačního kódu na objekt instrukce implementující **``InstructionBase``**.
 
+Obsahuje slovník **``OPCDODES``**, jehož klíčem je uppercase operační kód ukazující na slovníkovou strukturu s klíči:
+- *class* - typ třídy z instrukčních modulů.
+- *syntax* - syntaktické symboly (var, symb, label, type), určují typy a počet argumentů, které daná instrukce podporuje.
 
 ### [error.py](interpret/error.py)
 
