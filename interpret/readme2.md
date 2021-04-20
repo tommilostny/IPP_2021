@@ -67,7 +67,7 @@ Konkrétní třídy jsou dále v adresáři **instructions** implementovány v s
     - Instrukce pracující s datovými rámci **MOVE**, **CREATEFRAME**, **PUSHFRAME**, **POPFRAME**, **DEFVAR**.
     - Obsahuje slovníky ``global_frame``, ``temporary_frame``, seznam slovníků ``local_frames``, které jsou použity pro ukládání proměnných. Také obsahuje funkce **``get``**, **``set``**, které s rámci pracují a jsou využívány i ostatními moduly pro jednodušší práci s proměnnými
     (hlídají stav inicializace, přístup k validnímu rámci označeném ve jménu proměnné).
-    - Funkce ``get`` rovněž umožňuje vrátit hodnotu literálu, pokud typ argumentu není *var*.
+    - Funkce ``get`` také umožňuje vrátit hodnotu literálu, pokud typ argumentu není *var*.
     - Funkce ``set`` je rovněž instrukcí ``Defvar`` použita k definici proměnné, jinak je povolen přístup pouze k již inicializovaným proměnným.
 * [function.py](instructions/function.py)
     - Instrukce volání funckí **CALL**, **RETURN**.
@@ -86,6 +86,9 @@ Konkrétní třídy jsou dále v adresáři **instructions** implementovány v s
     - Instrukce pracující s řetětězci **CONCAT**, **STRLEN**, **GETCHAR**, **SETCHAR**.
 * [type.py](instructions/type.py)
     - Instrukce pro zjištění typu proměnné nebo literálu **TYPE**.
+    - Pro instrukci ``Type`` je funkce **``get``** z modulu *frames* upravena volitelným parametrem ``exit_on_uninitialized``,
+    který zajistí, že funkce ``get`` neskončí s chybou pro neinicializované proměnné, ale vyhodí výjimku zachycenou instrukcí ``Type``.
+    V tomto případě instrukce ``Type`` ukládá prázdný retězec. 
 
 ### [argument.py](argument.py)
 Obsahuje třídu **``Argument``** reprezentující argument instrukce programu.

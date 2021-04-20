@@ -5,7 +5,8 @@ from xml.etree.ElementTree import Element
 
 class Argument:
     def __init__(self, element:Element, syntax_symbols:List[str]):
-        try: self.type = str(element.attrib["type"])
+        try:
+            self.type = str(element.attrib["type"])
         except:
             raise SyntaxError(f"Bad argument: missing type attribute: {element} {element.attrib}")
 

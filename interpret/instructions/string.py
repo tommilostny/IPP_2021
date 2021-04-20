@@ -36,7 +36,10 @@ class Getchar(InstructionBase):
         if type(index) is not int:
             exit_instruction_error(self, 53, f"symb2 argument is expected to be integer, got {type(index).__name__}")
 
-        try: frames.set(self, 0, string[index])
+        try:
+            if index < 0: raise IndexError("Index cannot be negative.")
+
+            frames.set(self, 0, string[index])
         except IndexError as e:
             exit_instruction_error(self, 58, f"{e} {string, index}")
 

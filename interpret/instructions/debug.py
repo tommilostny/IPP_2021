@@ -38,4 +38,4 @@ def log_program_progress():
     global instructions_computed, last_instruction_index
     if break_instruction_present:
         instructions_computed += 1
-        last_instruction_index = flow_control.instruction_counter - 1
+        last_instruction_index = flow_control.program_counter - 1

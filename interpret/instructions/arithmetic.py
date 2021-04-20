@@ -34,4 +34,7 @@ class Mul(_ArithmeticInstructionBase):
 
 class IDiv(_ArithmeticInstructionBase):
     def invoke(self):
-        super().invoke(lambda x1, x2: x1 // x2)
+        try:
+            super().invoke(lambda x1, x2: x1 // x2)
+        except ZeroDivisionError:
+            exit_instruction_error(self, 57, "Division by zero.")

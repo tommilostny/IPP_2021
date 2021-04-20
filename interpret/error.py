@@ -14,4 +14,4 @@ def exit_error(message:str, exitcode:int):
 
 
 def exit_instruction_error(instr:InstructionBase, exitcode:int, message:str):
-    exit_error(f"{instr.name} (order: {instr.order}): {message}", exitcode)
+    exit_error(f"{instr.name} (order {instr.order}): {message}", exitcode)

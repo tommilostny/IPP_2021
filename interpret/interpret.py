@@ -61,24 +61,24 @@ if __name__ == "__main__":
 	if args.source is None and args.input is None:
 		exit_error(exitcode=10, message="Either --source or --input parameter needs to be specified.\nTo display help run the program with --help")
 
+	parse_xml(args.source)
+
 	if args.input is not None: #Zadán argument --input (otevření vstupního souboru pro čtení místo stdin)
 		try:
 			io.input_file = open(args.input, "r")
 		except FileNotFoundError as e:
 			exit_error(str(e), 11)
 
-	parse_xml(args.source)
-
-	while flow_control.instruction_counter < len(flow_control.instructions): #Hlavní smyčka programu
+	while flow_control.program_counter < len(flow_control.instructions): #Hlavní smyčka programu
 
 		#Instrukce skoku vrací int s pozicí cílové instrukce label.
 		#Ostatní instrukce vrací None -> inkrementace pozice následující instrukce.
-		next_instr = flow_control.instructions[flow_control.instruction_counter].invoke()
+		next_instr = flow_control.instructions[flow_control.program_counter].invoke()
 
 		if next_instr is None:
-			flow_control.instruction_counter += 1
+			flow_control.program_counter += 1
 		else:
-			flow_control.instruction_counter = next_instr
+			flow_control.program_counter = next_instr
 
 		log_program_progress() #logování ladících informací pro instrukci BREAK
 

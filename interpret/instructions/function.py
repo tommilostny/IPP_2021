@@ -14,7 +14,7 @@ class Call(InstructionBase):
         if self.arguments[0].value not in flow_control.labels.keys():
             exit_instruction_error(self, 52, f"Label {self.arguments[0].value} does not exist")
         
-        call_stack.append(flow_control.instruction_counter + 1)
+        call_stack.append(flow_control.program_counter + 1)
         return flow_control.labels[self.arguments[0].value]
 
 

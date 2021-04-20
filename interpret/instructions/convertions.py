@@ -27,6 +27,8 @@ class Stri2Int(InstructionBase):
         if type(index) is not int:
             exit_instruction_error(self, 53, f"Second argument is expected to be integer, got {type(index).__name__}")
         try:
+            if index < 0: raise IndexError("Index cannot be negative.")
+
             frames.set(self, 0, ord(string[index]))
 
         except IndexError as e:

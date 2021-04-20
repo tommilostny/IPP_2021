@@ -12,7 +12,7 @@ instructions:List[InstructionBase] = []
 labels:Dict[str, int] = {}
 
 #Čítač instrukcí
-instruction_counter = 0
+program_counter = 0
 
 
 def register_all_labels():
@@ -47,7 +47,7 @@ class _ConditionalJumpBase(InstructionBase):
         value1 = frames.get(self, 1)
         value2 = frames.get(self, 2)
 
-        if type(value1) is not type(value2):
+        if type(value1) is not type(value2) and value1 is not None and value2 is not None:
             exit_instruction_error(self, 53, f"Cannot compare {type(value1).__name__} and {type(value2).__name__}")
 
         if comparison(value1, value2):
@@ -68,7 +68,10 @@ class Exit(InstructionBase):
     def invoke(self):
         exitcode = frames.get(self, 0)
 
-        if type(exitcode) is not int or exitcode < 0 or exitcode > 49:
+        if type(exitcode) is not int:
+            exit_instruction_error(self, 53, f"Invalid exit code type {exitcode}")
+
+        if exitcode < 0 or exitcode > 49:
             exit_instruction_error(self, 57, f"Invalid exit code {exitcode}")
 
         exit(exitcode)

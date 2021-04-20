@@ -1,5 +1,17 @@
 .IPPcode21
-JUMP main
+#JUMP main
+
+CREATEFRAME
+PUSHFRAME
+
+DEFVAR LF@a
+DEFVAR LF@res
+#move LF@a bool@false
+TYPE LF@res LF@a
+
+WRITE string@Typ:\032
+WRITE LF@res
+WRITE string@\010
 
 #CREATEFRAME
 
@@ -63,54 +75,55 @@ JUMP main
 #WRITE string@\010
 
 
-LABEL func1
-    CREATEFRAME
-    PUSHFRAME
-    DEFVAR LF@top
-    DEFVAR LF@counter
-    DEFVAR LF@bottom
-    POPS LF@top
-    POPS LF@bottom
-    LABEL init_while
-        MOVE LF@counter LF@bottom
-        LABEL while
-            dprint LF@counter
-            JUMPIFEQ end LF@counter LF@top
-            dprint string@,\032
-            ADD LF@counter LF@counter int@1
-        JUMP while
-        LABEL end
-        dprint string@\010
-        sub LF@top LF@top int@1
-    JUMPIFNEQ init_while LF@top LF@bottom
-    POPFRAME
-    CREATEFRAME
-RETURN
-
-LABEL main
-    WRITE string@First\032call:\010
-    PUSHS int@100
-    PUSHS int@111
-    CALL func1
-
-    WRITE string@\010Second\032call:\010
-    PUSHS int@2
-    PUSHS int@5
-    CALL func1
-    
-    DEFVAR GF@testik
-    DEFVAR GF@typ_testiku
-    READ GF@testik int
-    TYPE GF@typ_testiku GF@testik
-    WRITE GF@testik
-    WRITE string@,\032
-    WRITE GF@typ_testiku
-    WRITE string@\010
-
-    READ GF@testik bool
-    TYPE GF@typ_testiku GF@testik
-    WRITE GF@testik
-    WRITE string@,\032
-    WRITE GF@typ_testiku
-    WRITE string@\010
-EXIT int@0
+#LABEL func1
+#    CREATEFRAME
+#    PUSHFRAME
+#    DEFVAR LF@top
+#    DEFVAR LF@counter
+#    DEFVAR LF@bottom
+#    POPS LF@top
+#    POPS LF@bottom
+#    LABEL init_while
+#        MOVE LF@counter LF@bottom
+#        LABEL while
+#            dprint LF@counter
+#            JUMPIFEQ end LF@counter LF@top
+#            dprint string@,\032
+#            ADD LF@counter LF@counter int@1
+#        JUMP while
+#        LABEL end
+#        dprint string@\010
+#        sub LF@top LF@top int@1
+#    JUMPIFNEQ init_while LF@top LF@bottom
+#    POPFRAME
+#    CREATEFRAME
+#RETURN
+#
+#LABEL main
+#    WRITE string@First\032call:\010
+#    PUSHS int@100
+#    PUSHS int@111
+#    CALL func1
+#
+#    WRITE string@\010Second\032call:\010
+#    PUSHS int@2
+#    PUSHS int@5
+#    CALL func1
+#    
+#    DEFVAR GF@testik
+#    DEFVAR GF@typ_testiku
+#    READ GF@testik int
+#    TYPE GF@typ_testiku GF@testik
+#    WRITE GF@testik
+#    WRITE string@,\032
+#    WRITE GF@typ_testiku
+#    WRITE string@\010
+#
+#    READ GF@testik bool
+#    TYPE GF@typ_testiku GF@testik
+#    WRITE GF@testik
+#    WRITE string@,\032
+#    WRITE GF@typ_testiku
+#    WRITE string@\010
+#EXIT int@0
+#
