@@ -5,22 +5,22 @@ include_once("argument.php");
 include_once("error.php");
 
 /// Typy tokenů vyskytující se v jazyce IPPcode21
-class TokenType
+abstract class TokenType
 {
-	public const EOL = "Konec řádku";
-	public const EOF = "Konec souboru";
-	public const HEADER = "Hlavička";
-	public const OPCODE = "Operační kód instrukce";
-	public const ARGUMENT = "Argument";
+	const EOL = "Konec řádku";
+	const EOF = "Konec souboru";
+	const HEADER = "Hlavička";
+	const OPCODE = "Operační kód instrukce";
+	const ARGUMENT = "Argument";
 }
 
 /// Reprezentace datové struktury tokenu, drží informace o typu, jeho atribut a další.
 class Token
 {
-	public $Type = NULL;
-	public $Attribute = NULL;
-	public $Line;
-	public $Position;
+	var $Type = NULL;
+	var $Attribute = NULL;
+	var $Line;
+	var $Position;
 }
 
 /// Třída lexikálního analyzátoru, drží si informace o vstupním souboru.
